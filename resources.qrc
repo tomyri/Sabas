@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/nocover.jpg</file>
+        <file>img/nocover.png</file>
+    </qresource>
+</RCC>
