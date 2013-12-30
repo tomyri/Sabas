@@ -15,8 +15,12 @@
     </message>
     <message>
         <location filename="../qml/pages/HelpPage.qml" line="30"/>
+        <source>Books are searched from &apos;Audiobooks&apos; and &apos;Documents/Audiobooks&apos; folders under user&apos;s home directory. Each folder under those paths is treat as a book. Each book-folder can contain multiple folders (CD 01, CD 02, etc). If there is an image, that is used as book cover.</source>
+        <translation>Kirjoja etsitään käyttäjän kotikansion alaisista &apos;Audiobooks&apos; ja &apos;Documents/Audiobooks&apos; kansioista. Jokainen näiden polkujen alainen kansio käsitellään yhtenä kirjana. Kansio voi pitää sisällään useita kansioita (CD 01, CD 02, jne). Jos kansio sisältää kuvan, sitä käytetään kirjan kansikuvana.</translation>
+    </message>
+    <message>
         <source>Books are searched from Library path. Each folder under that path is treat as a book. Each book-folder can contain multiple folders (CD 01, CD 02, etc). If there is image, that is used as book cover.</source>
-        <translation>Kirjat haetaan kirjastopolun alta. Jokainen tämän polun alainen kansio käsitellään yhtenä kirjana. Kansio voi pitää sisällään useita kansioita (CD 01, CD 02, jne). Jos kansio sisältää kuvan, sitä käytetään kirjan kansikuvana.</translation>
+        <translation type="vanished">Kirjat haetaan kirjastopolun alta. Jokainen tämän polun alainen kansio käsitellään yhtenä kirjana. Kansio voi pitää sisällään useita kansioita (CD 01, CD 02, jne). Jos kansio sisältää kuvan, sitä käytetään kirjan kansikuvana.</translation>
     </message>
     <message>
         <source>Books are searched from Library path. Each folder under that path is handled as one book. Folder can contain multiple folders (CD 01, CD 02, etc). If folder contains an image, that is used as book cover.</source>
@@ -31,14 +35,12 @@
 <context>
     <name>LibraryPage</name>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="10"/>
         <source>Change library path</source>
-        <translation>Vaihda kirjastopolku</translation>
+        <translation type="vanished">Vaihda kirjastopolku</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="12"/>
         <source>Library Path</source>
-        <translation>Kirjaston polku</translation>
+        <translation type="vanished">Kirjaston polku</translation>
     </message>
     <message>
         <location filename="../qml/pages/LibraryPage.qml" line="19"/>
