@@ -27,7 +27,7 @@ Page {
             Label {
                 wrapMode: Text.WordWrap
                 width: parent.width
-                text: qsTr("Books are searched from Library path. Each folder under that path is treat as a book. Each book-folder can contain multiple folders (CD 01, CD 02, etc). If there is image, that is used as book cover.")
+                text: qsTr("Books are searched from 'Audiobooks' and 'Documents/Audiobooks' folders under user's home directory. Each folder under those paths is treat as a book. Each book-folder can contain multiple folders (CD 01, CD 02, etc). If there is an image, that is used as book cover.")
             }
             Label {
                 wrapMode: Text.WordWrap

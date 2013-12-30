@@ -1,20 +1,20 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Sabas 1.0
+import harbour.sabas.sabasplugin 1.0
 
 Page {
     id: page
     SilicaListView {
         PullDownMenu {
-            MenuItem {
-                text: qsTr("Change library path")
-                onClicked: {
-                    var dialog = pageStack.push("RenameDialog.qml", {"label": qsTr("Library Path"),"text" : SabasLibrary.libraryRootPath})
-                    dialog.accepted.connect(function() {
-                        SabasLibrary.libraryRootPath = dialog.text
-                    })
-                }
-            }
+//            MenuItem {
+//                text: qsTr("Change library path")
+//                onClicked: {
+//                    var dialog = pageStack.push("RenameDialog.qml", {"label": qsTr("Library Path"),"text" : SabasLibrary.libraryRootPath})
+//                    dialog.accepted.connect(function() {
+//                        SabasLibrary.libraryRootPath = dialog.text
+//                    })
+//                }
+//            }
             MenuItem {
                 text: qsTr("Help")
                 onClicked: pageStack.push("HelpPage.qml")

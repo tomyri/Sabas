@@ -27,7 +27,7 @@ SabasPlugin::~SabasPlugin()
 
 void SabasPlugin::registerTypes(const char *uri)
 {
-    // @uri Sabas
+    // @uri harbour.sabas.sabasplugin
     qmlRegisterSingletonType<SabasLibrary>(uri, 1, 0, "SabasLibrary", sabasLibraryInstance);
     qmlRegisterUncreatableType<SabasBook>(uri, 1, 0, "SabasBook", QStringLiteral("Books are provided by SabasLibrary"));
 }

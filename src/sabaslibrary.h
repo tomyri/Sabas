@@ -4,6 +4,7 @@
 #include "sabasbook.h"
 #include <QObject>
 #include <QList>
+#include <QStringList>
 
 class QMediaPlayer;
 class QTimer;
@@ -14,7 +15,6 @@ class SabasLibrary : public QObject
     Q_PROPERTY(qint64 trackDuration READ trackDuration NOTIFY trackDurationChanged)
     Q_PROPERTY(qint64 trackPosition READ trackPosition WRITE setTrackPosition NOTIFY trackPositionChanged)
     Q_PROPERTY(SabasBook* selectedBook READ selectedBook NOTIFY selectedBookChanged)
-    Q_PROPERTY(QString libraryRootPath READ libraryRootPath WRITE setLibraryRootPath NOTIFY libraryRootPathChanged)
     Q_PROPERTY(bool isSleepTimerActive READ isSleepTimerActive NOTIFY sleepTimerActivityChanged)
 
 public:
@@ -27,7 +27,6 @@ public:
     qint64 trackDuration() const;
     qint64 trackPosition() const;
     SabasBook *selectedBook() const;
-    QString libraryRootPath() const;
     bool isSleepTimerActive() const;
 
 public slots:
@@ -38,7 +37,6 @@ public slots:
     void pause();
     void play(SabasBook *book, bool fromBeginning = false);
     void setTrackPosition(qint64 position);
-    void setLibraryRootPath(const QString &path);
     void startSleepTimer(int minutes);
     void stopSleepTimer();
 
@@ -48,7 +46,6 @@ signals:
     void trackDurationChanged(qint64 duration);
     void trackPositionChanged(qint64 position);
     void selectedBookChanged(SabasBook* book);
-    void libraryRootPathChanged(QString arg);
     void sleepTimerActivityChanged(bool isRunning);
 
 private:
@@ -56,10 +53,10 @@ private:
     void loadSettings();
     QList<SabasBook*> m_books;
     QMediaPlayer *m_player;
-    QTimer *m_saveTimer;
+//    QTimer *m_saveTimer;
     QTimer *m_sleepTimer;
     SabasBook *m_selectedBook;
-    QString m_libraryRootPath;
+    QStringList m_libraryRootPaths;
 };
 
 #endif // SABASLIBRARY_H

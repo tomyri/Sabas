@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Sabas 1.0
+import harbour.sabas.sabasplugin 1.0
 
 Page {
     id: page
@@ -45,7 +45,7 @@ Page {
                 maximumValue: SabasLibrary.trackDuration
                 value: SabasLibrary.trackPosition
                 width: parent.width
-                valueText: ("%1:%2").arg((value / 1000 / 60).toFixed(0)).arg(("0" + (value  / 1000 % 60).toFixed(0)).slice(-2))
+                valueText: ("%1:%2").arg(parseInt(value / 1000 / 60)).arg(("0" + (value  / 1000 % 60).toFixed(0)).slice(-2))
                 label: qsTr("Track %1").arg(book.currentIndex + 1)
             }
             Row {

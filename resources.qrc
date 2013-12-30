@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>img/nocover.png</file>
+        <file>harbour-sabas.png</file>
+        <file>harbour-sabas.svg</file>
     </qresource>
 </RCC>

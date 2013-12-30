@@ -8,31 +8,32 @@
 SabasLibrary::SabasLibrary(QObject *parent) :
     QObject(parent),
     m_player(new QMediaPlayer(this)),
-    m_saveTimer(new QTimer(this)),
+    //    m_saveTimer(new QTimer(this)),
     m_sleepTimer(0),
     m_selectedBook(0)
 {
+    m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
     loadSettings();
     scanNewBooks();
     saveSettings();
     m_player->setNotifyInterval(1000);
     connect(m_player, &QMediaPlayer::stateChanged, [=](QMediaPlayer::State state){
         emit isPlayingChanged(state == QMediaPlayer::PlayingState);
-        if (state == QMediaPlayer::PlayingState)
-            m_saveTimer->start();
-        else
-            m_saveTimer->stop();
+        //        if (state == QMediaPlayer::PlayingState)
+        //            m_saveTimer->start();
+        //        else
+        //            m_saveTimer->stop();
     });
     connect(m_player, &QMediaPlayer::durationChanged, this, &SabasLibrary::trackDurationChanged);
     connect(m_player, &QMediaPlayer::positionChanged, this, &SabasLibrary::trackPositionChanged);
-    connect(m_saveTimer, &QTimer::timeout, this, &SabasLibrary::saveSettings);
-    m_saveTimer->setInterval(60000);
-    m_saveTimer->setSingleShot(false);
-//        for (int k = 0; k < 50; ++k) {
-//            SabasBook *s = new SabasBook("mooo " + QString::number(k));
-//            s->setName("mooo " + QString::number(k));
-//            m_books.append(s);
-//        }
+    //    connect(m_saveTimer, &QTimer::timeout, this, &SabasLibrary::saveSettings);
+    //    m_saveTimer->setInterval(60000);
+    //    m_saveTimer->setSingleShot(false);
+    //        for (int k = 0; k < 50; ++k) {
+    //            SabasBook *s = new SabasBook("mooo " + QString::number(k));
+    //            s->setName("mooo " + QString::number(k));
+    //            m_books.append(s);
+    //        }
 }
 
 SabasLibrary::~SabasLibrary()
@@ -59,25 +60,27 @@ SabasBook *SabasLibrary::at(int index)
 
 void SabasLibrary::scanNewBooks()
 {
-    QDir parentDir = QDir(m_libraryRootPath);
-    QStringList bookStrings = parentDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach (const QString s, bookStrings) {
-        bool alreadyThere = false;
-        foreach (SabasBook *b, m_books) {
-            if (b->rootPath() == parentDir.absolutePath() + "/" + s) {
-                alreadyThere = true;
-                qDebug() << "book already loaded from settings";
-                break;
+    foreach (const QString &rootPath, m_libraryRootPaths) {
+        QDir parentDir = QDir(rootPath);
+        QStringList bookStrings = parentDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        foreach (const QString s, bookStrings) {
+            bool alreadyThere = false;
+            foreach (SabasBook *b, m_books) {
+                if (b->rootPath() == parentDir.absolutePath() + "/" + s) {
+                    alreadyThere = true;
+                    qDebug() << "book already loaded from settings";
+                    break;
+                }
             }
+            if (alreadyThere)
+                continue;
+            SabasBook *book = new SabasBook(parentDir.absolutePath() + "/" + s);
+            book->setName(s);
+            if (book->findMedia())
+                m_books.append(book);
+            else
+                delete book;
         }
-        if (alreadyThere)
-            continue;
-        SabasBook *book = new SabasBook(parentDir.absolutePath() + "/" + s);
-        book->setName(s);
-        if (book->findMedia())
-            m_books.append(book);
-        else
-            delete book;
     }
 }
 
@@ -110,6 +113,7 @@ void SabasLibrary::stop()
     m_player->stop();
     m_player->setPlaylist(0);
     m_selectedBook = 0;
+    emit selectedBookChanged(0);
     saveSettings();
 }
 
@@ -154,15 +158,8 @@ qint64 SabasLibrary::trackPosition() const
 
 void SabasLibrary::setTrackPosition(qint64 position)
 {
+    qDebug() << "Setting position";
     m_player->setPosition(position);
-}
-
-void SabasLibrary::setLibraryRootPath(const QString &path)
-{
-    if (m_libraryRootPath != path) {
-        m_libraryRootPath = path;
-        emit libraryRootPathChanged(path);
-    }
 }
 
 void SabasLibrary::startSleepTimer(int minutes)
@@ -194,11 +191,6 @@ SabasBook *SabasLibrary::selectedBook() const
     return m_selectedBook;
 }
 
-QString SabasLibrary::libraryRootPath() const
-{
-    return m_libraryRootPath;
-}
-
 bool SabasLibrary::isSleepTimerActive() const
 {
     return m_sleepTimer != 0;
@@ -207,10 +199,9 @@ bool SabasLibrary::isSleepTimerActive() const
 void SabasLibrary::saveSettings()
 {
     QSettings s;
-    s.setValue("libraryRoot", m_libraryRootPath);
     s.beginWriteArray("books");
     for (int k = 0; k < m_books.size(); ++k) {
-        SabasBook *sb = books().at(k);
+        SabasBook *sb = m_books.at(k);
         s.setArrayIndex(k);
         s.setValue("rootPath", sb->rootPath());
         s.setValue("name", sb->name());
@@ -225,7 +216,6 @@ void SabasLibrary::saveSettings()
 void SabasLibrary::loadSettings()
 {
     QSettings s;
-    m_libraryRootPath = s.value("libraryRoot", "/home/nemo/Audiobooks/").toString();
     int size = s.beginReadArray("books");
     for (int k = 0; k < size; ++k) {
         s.setArrayIndex(k);

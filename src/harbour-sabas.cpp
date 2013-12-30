@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Sabas");
 
     SabasPlugin sp;
-    sp.registerTypes("Sabas");
+    sp.registerTypes("harbour.sabas.sabasplugin");
 
     QGuiApplication *app = SailfishApp::application(argc, argv);
     QTranslator translator;
@@ -28,4 +28,3 @@ int main(int argc, char *argv[])
     v->show();
     return app->exec();
 }
-
