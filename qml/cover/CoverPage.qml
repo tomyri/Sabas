@@ -22,7 +22,7 @@ CoverBackground {
         id: coverAction
         enabled: SabasLibrary.selectedBook
         CoverAction {
-            iconSource: "image://theme/icon-cover-pause"
+            iconSource: SabasLibrary.isPlaying ? "image://theme/icon-cover-pause" : "image://theme/icon-cover-play"
             onTriggered: SabasLibrary.toggle()
         }
     }

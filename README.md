@@ -8,7 +8,13 @@ Features:
 - Remembers playback position for each book.
 - Sleep timer.
 - Toggle playback from home view.
+- Cover art
 
+How To Use It
+=============
+
+Place your books in 'Audiobooks' or 'Documents/Audiobooks' folder under user's home folder. (This will be user selectable 
+if/when there is file picker component.)
 
 Licenses
 ========
