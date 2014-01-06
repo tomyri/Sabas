@@ -2,6 +2,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QMediaPlayer>
+#include <QQmlEngine>
 #include <QSettings>
 #include <QTimer>
 
@@ -38,6 +39,7 @@ SabasLibrary::SabasLibrary(QObject *parent) :
 
 SabasLibrary::~SabasLibrary()
 {
+    qDebug() << "library deleted";
     stop();
     saveSettings();
     qDeleteAll(m_books);
@@ -143,6 +145,7 @@ void SabasLibrary::play(SabasBook *book, bool fromBeginning)
     s->start(500);
     connect(s, &QTimer::timeout, [=](){ //TODO: ok, this works. work out some way to get the right time to set the position
         m_player->setPosition(m_selectedBook->lastTrackPosition());
+        s->deleteLater();
     });
 }
 
@@ -226,6 +229,7 @@ void SabasLibrary::loadSettings()
             continue;
         }
         SabasBook *sb = new SabasBook(rootPath);
+        QQmlEngine::setObjectOwnership(sb, QQmlEngine::CppOwnership);
         sb->setName(s.value("name").toString());
         sb->setLastIndex(s.value("lastIndex").toInt());
         sb->setLastTrackPosition(s.value("lastTrackPosition").toLongLong());
