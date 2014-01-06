@@ -4,6 +4,8 @@
 #include <QMediaPlayer>
 #include <QDebug>
 
+bool naturalSort(const QString &s1, const QString &s2);
+
 SabasBook::SabasBook(const QString &folder, QObject *parent) :
     QObject(parent),
     m_playlist(new QMediaPlaylist(this)),
@@ -46,6 +48,8 @@ void SabasBook::scanFolder(const QString &folder)
     }
     QStringList folders = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     if (!folders.isEmpty()) {
+        qSort(folders.begin(), folders.end(), naturalSort);
+        qDebug() << folders;
         foreach (const QString &f, folders) {
             scanFolder(dir.absolutePath() + "/" + f);
         }
@@ -53,6 +57,7 @@ void SabasBook::scanFolder(const QString &folder)
         QStringList filters;
         filters.append("*.mp3");
         QStringList files = dir.entryList(filters, QDir::Files);
+        qSort(files.begin(), files.end(), naturalSort);
         foreach (const QString &f, files) {
             m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(dir.absolutePath() + "/" + f)));
             qDebug() << "Added " << QUrl::fromLocalFile(dir.absolutePath() + "/" + f);
@@ -146,4 +151,53 @@ void SabasBook::setLastTrackPosition(qint64 position)
 {
     qDebug() << "last position to " << position;
     m_lastTrackPosition = position;
+}
+
+bool naturalSort(const QString &s1, const QString &s2)
+{
+    if (s1.isEmpty() || s2.isEmpty())
+        return s1 < s2;
+    // ignore common prefix
+    int i = 0;
+    while (s1.at(i).toLower() == s2.at(i).toLower()) {
+        ++i;
+        //common until other ends, return smaller
+        if ((i == s1.length()) || (i == s2.length())) {
+            return s1.length() < s2.length();
+        }
+    }
+    //If not number return native comparator
+    if(!s1.at(i).isNumber() || !s2.at(i).isNumber()) {
+        //make sure that 1_... < 12_...
+        if(s1.at(i).isNumber())
+            return false;
+        if(s2.at(i).isNumber())
+            return true;
+        return QString::compare(s1, s2, Qt::CaseSensitive) < 0;
+    }
+    QString n;
+    int k = i;
+    while ((k >= 0) && (s1.at(k).isNumber())) {
+        n = s1.at(k) + n;
+        --k;
+    }
+    // get relevant number strings
+    k = i;
+    QString n1;
+    while ((k < s1.length()) && (s1.at(k).isNumber()))
+        n1 += s1.at(k++);
+    k = i;
+    QString n2;
+    while ((k < s2.length()) && (s2.at(k).isNumber()))
+        n2 += s2.at(k++);
+
+    // got two numbers to compare?
+    if (!n1.isEmpty() && !n2.isEmpty())
+        return (n + n1).toInt() < (n + n2).toInt();
+    // not a number has to win over a number.. number could have ended earlier... same prefix..
+    if (!n1.isEmpty())
+        return false;
+    if (!n2.isEmpty())
+        return true;
+    return s1.at(i) < s2.at(i);
 }
