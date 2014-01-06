@@ -68,14 +68,8 @@ Page {
             }
             onClicked: {
                 var book = SabasLibrary.at(index)
-                SabasLibrary.play(book)
                 pageStack.push("PlayerPage.qml", {"book":book})
             }
         }
     }
 }
-
-
-
-
-

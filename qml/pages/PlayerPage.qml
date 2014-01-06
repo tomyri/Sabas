@@ -24,6 +24,15 @@ Page {
                     })
                 }
             }
+            MenuItem {
+                text: qsTr("Select track")
+                onClicked: {
+                    var dialog = pageStack.push("SelectTrackDialog.qml", {"book":book})
+                    dialog.accepted.connect(function() {
+                        book.currentIndex = dialog.mediaIndex
+                    })
+                }
+            }
         }
         contentHeight: column.height
         Column {
@@ -35,7 +44,7 @@ Page {
             }
             Image {
                 id: img
-                source: SabasLibrary.selectedBook.coverPath === "" ? "qrc:/img/nocover.png" : SabasLibrary.selectedBook.coverPath
+                source: book.coverPath === "" ? "qrc:/img/nocover.png" : book.coverPath
                 fillMode: Image.PreserveAspectFit
                 height: 500
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -75,5 +84,6 @@ Page {
             }
         }
     }
+    Component.onCompleted: SabasLibrary.play(book)
     Component.onDestruction: SabasLibrary.stop()
 }

@@ -4,7 +4,7 @@ import "pages"
 
 ApplicationWindow
 {
-    initialPage: LibraryPage { }
+    initialPage: LibraryPage {}
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 }
 

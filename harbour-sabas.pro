@@ -26,7 +26,8 @@ OTHER_FILES += qml/harbour-sabas.qml \
     qml/pages/PlayerPage.qml \
     qml/pages/RenameDialog.qml \
     qml/pages/SleepTimeDialog.qml \
-    qml/pages/HelpPage.qml
+    qml/pages/HelpPage.qml \
+    qml/pages/SelectTrackDialog.qml
 
 HEADERS += \
     src/sabasplugin.h \

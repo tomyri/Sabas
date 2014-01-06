@@ -16,7 +16,6 @@ CoverBackground {
         source: SabasLibrary.selectedBook ? SabasLibrary.selectedBook.coverPath : "qrc:/harbour-sabas.png"
         fillMode: SabasLibrary.selectedBook ? Image.PreserveAspectCrop : Image.Pad
         anchors.fill: parent
-        z: -2
     }
     CoverActionList {
         id: coverAction
@@ -27,5 +26,3 @@ CoverBackground {
         }
     }
 }
-
-

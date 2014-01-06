@@ -10,11 +10,12 @@ class SabasBook : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(QString coverPath READ coverPath NOTIFY coverPathChanged)
 
 public:
     explicit SabasBook(const QString &folder, QObject *parent = 0);
+    ~SabasBook();
 
     void setName(const QString &name);
     QString name() const;
@@ -35,6 +36,8 @@ public:
 
     int lastIndex() const;
     void setLastIndex(int lastIndex);
+    Q_INVOKABLE int mediaCount() const;
+    Q_INVOKABLE QString mediaToDisplayStringAt(int index) const;
 
 public slots:
     void setLastTrackPosition(qint64 position);

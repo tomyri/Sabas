@@ -20,6 +20,11 @@ SabasBook::SabasBook(const QString &folder, QObject *parent) :
     });
 }
 
+SabasBook::~SabasBook()
+{
+    qDebug() << "book deleted";
+}
+
 void SabasBook::setName(const QString &name)
 {
     if (m_name != name) {
@@ -49,7 +54,6 @@ void SabasBook::scanFolder(const QString &folder)
     QStringList folders = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     if (!folders.isEmpty()) {
         qSort(folders.begin(), folders.end(), naturalSort);
-        qDebug() << folders;
         foreach (const QString &f, folders) {
             scanFolder(dir.absolutePath() + "/" + f);
         }
@@ -60,7 +64,7 @@ void SabasBook::scanFolder(const QString &folder)
         qSort(files.begin(), files.end(), naturalSort);
         foreach (const QString &f, files) {
             m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(dir.absolutePath() + "/" + f)));
-            qDebug() << "Added " << QUrl::fromLocalFile(dir.absolutePath() + "/" + f);
+//            qDebug() << "Added " << QUrl::fromLocalFile(dir.absolutePath() + "/" + f);
         }
     }
 }
@@ -72,6 +76,16 @@ int SabasBook::lastIndex() const
 void SabasBook::setLastIndex(int lastIndex)
 {
     m_lastIndex = lastIndex;
+}
+
+int SabasBook::mediaCount() const
+{
+    return m_playlist->mediaCount();
+}
+
+QString SabasBook::mediaToDisplayStringAt(int index) const
+{
+    return m_playlist->media(index).canonicalUrl().toLocalFile().remove(m_rootPath + "/");
 }
 
 
