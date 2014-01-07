@@ -29,7 +29,6 @@ public:
     QStringList playListStrings() const;
     void setPlaylist(const QStringList &tracks);
 
-    bool findMedia();
     int currentIndex() const;
     void setCurrentIndex(int index);
     QString coverPath() const;
@@ -40,6 +39,8 @@ public:
     Q_INVOKABLE QString mediaToDisplayStringAt(int index) const;
 
 public slots:
+    bool locateMedia();
+    bool relocateMedia();
     void setLastTrackPosition(qint64 position);
     void next();
     void previous();

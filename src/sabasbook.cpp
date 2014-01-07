@@ -118,12 +118,18 @@ void SabasBook::setPlaylist(const QStringList &tracks)
     }
 }
 
-bool SabasBook::findMedia()
+bool SabasBook::locateMedia()
 {
     if (m_rootPath.isEmpty())
         return false;
     scanFolder(m_rootPath);
     return !m_playlist->isEmpty();
+}
+
+bool SabasBook::relocateMedia()
+{
+    m_playlist->clear();
+    return locateMedia();
 }
 
 void SabasBook::next()
@@ -151,7 +157,6 @@ int SabasBook::currentIndex() const
 
 void SabasBook::setCurrentIndex(int index)
 {
-    qDebug() << "setting playlists current index to " << index;
     m_playlist->setCurrentIndex(index);
 }
 
@@ -162,7 +167,6 @@ QString SabasBook::coverPath() const
 
 void SabasBook::setLastTrackPosition(qint64 position)
 {
-    qDebug() << "last position to " << position;
     m_lastTrackPosition = position;
 }
 

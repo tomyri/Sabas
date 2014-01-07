@@ -77,7 +77,7 @@ void SabasLibrary::scanNewBooks()
                 continue;
             SabasBook *book = new SabasBook(parentDir.absolutePath() + "/" + s);
             book->setName(s);
-            if (book->findMedia())
+            if (book->locateMedia())
                 m_books.append(book);
             else
                 delete book;
