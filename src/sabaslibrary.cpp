@@ -39,7 +39,6 @@ SabasLibrary::SabasLibrary(QObject *parent) :
 
 SabasLibrary::~SabasLibrary()
 {
-    qDebug() << "library deleted";
     stop();
     saveSettings();
     qDeleteAll(m_books);

@@ -22,7 +22,6 @@ SabasBook::SabasBook(const QString &folder, QObject *parent) :
 
 SabasBook::~SabasBook()
 {
-    qDebug() << "book deleted";
 }
 
 void SabasBook::setName(const QString &name)
@@ -59,7 +58,7 @@ void SabasBook::scanFolder(const QString &folder)
         }
     } else {
         QStringList filters;
-        filters.append("*.mp3");
+        filters << "*.mp3" << "*.ogg" << "*.m4a" << "*.flac" << "*.acc" << "*.mp4" << "*.3gp";
         QStringList files = dir.entryList(filters, QDir::Files);
         qSort(files.begin(), files.end(), naturalSort);
         foreach (const QString &f, files) {
