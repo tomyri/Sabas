@@ -13,8 +13,8 @@ Name:       harbour-sabas
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sabas is AudioBook Application for Sailfish
-Version:    0.1
-Release:    2
+Version:    0.2
+Release:    1
 Group:      Qt/Qt
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2
@@ -27,7 +27,16 @@ BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  desktop-file-utils
 
 %description
-Sabas is AudioBook Application for Sailfish.
+Sabas is designed specially for audio book playback. 
+
+Features:
+- Remembers playback position for each book.
+- Sleep timer.
+- Toggle playback from home view.
+- Cover art
+
+Usage:
+Place your books in 'Audiobooks' or 'Documents/Audiobooks' folder under user's home folder.
 
 %prep
 %setup -q -n %{name}-%{version}
