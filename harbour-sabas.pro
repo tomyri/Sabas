@@ -32,7 +32,8 @@ OTHER_FILES += qml/harbour-sabas.qml \
 HEADERS += \
     src/sabasplugin.h \
     src/sabaslibrary.h \
-    src/sabasbook.h
+    src/sabasbook.h \
+    src/bingkey.h
 
 CONFIG += c++11
 
