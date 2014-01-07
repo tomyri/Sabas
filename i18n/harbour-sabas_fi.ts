@@ -67,6 +67,11 @@
         <source>Book name</source>
         <translation>Kirjan nimi</translation>
     </message>
+    <message>
+        <location filename="../qml/pages/LibraryPage.qml" line="52"/>
+        <source>Rescan media</source>
+        <translation>Etsi media uudelleen</translation>
+    </message>
 </context>
 <context>
     <name>PlayerPage</name>
@@ -81,7 +86,12 @@
         <translation>Uniajastin</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="49"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="28"/>
+        <source>Select track</source>
+        <translation>Valitse raita</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/PlayerPage.qml" line="58"/>
         <source>Track %1</source>
         <translation>Raita %1</translation>
     </message>
@@ -92,6 +102,14 @@
         <location filename="../qml/pages/RenameDialog.qml" line="12"/>
         <source>Save</source>
         <translation>Tallenna</translation>
+    </message>
+</context>
+<context>
+    <name>SelectTrackDialog</name>
+    <message>
+        <location filename="../qml/pages/SelectTrackDialog.qml" line="10"/>
+        <source>Play selected</source>
+        <translation>Toista valittu</translation>
     </message>
 </context>
 <context>
