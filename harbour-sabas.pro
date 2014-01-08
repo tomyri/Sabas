@@ -8,7 +8,7 @@
 #         - icon definition filename in desktop file must be changed
 TARGET = harbour-sabas
 
-QT += multimedia
+QT += multimedia network
 
 CONFIG += sailfishapp
 

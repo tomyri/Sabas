@@ -49,6 +49,13 @@ Page {
                     }
                 }
                 MenuItem {
+                    text: qsTr("Find cover")
+                    onClicked: {
+                        var book = SabasLibrary.at(index)
+                        SabasLibrary.searchCover(book)
+                    }
+                }
+                MenuItem {
                     text: qsTr("Rescan media")
                     onClicked: {
                         var book = SabasLibrary.at(index)

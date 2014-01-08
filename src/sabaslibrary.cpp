@@ -1,17 +1,27 @@
 #include "sabaslibrary.h"
+#include "bingkey.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QMediaPlayer>
 #include <QQmlEngine>
 #include <QSettings>
 #include <QTimer>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrlQuery>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
 
 SabasLibrary::SabasLibrary(QObject *parent) :
     QObject(parent),
     m_player(new QMediaPlayer(this)),
     //    m_saveTimer(new QTimer(this)),
     m_sleepTimer(0),
-    m_selectedBook(0)
+    m_selectedBook(0),
+    m_nam(0)
 {
     m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
     loadSettings();
@@ -188,6 +198,38 @@ void SabasLibrary::stopSleepTimer()
     emit sleepTimerActivityChanged(false);
 }
 
+void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchString)
+{
+    if (!isCoverSearchEnabled())
+        return;
+    if (m_nam == 0)
+        m_nam = new QNetworkAccessManager(this);
+    QByteArray keyBase64 = BING_KEY + ":" + BING_KEY;
+    keyBase64 = keyBase64.toBase64();
+    QString searchString;
+    if (customSearchString.isEmpty())
+        searchString = book->name();
+    else
+        searchString = customSearchString;
+    searchString.prepend("'");
+    searchString.append("'");
+    QUrlQuery query;
+    query.addQueryItem("Query", QUrl(searchString).toEncoded());
+    query.addQueryItem("$format", "json");
+    query.addQueryItem("$top", "1");
+    QUrl url("https://api.datamarket.azure.com/Bing/Search/Image");
+    url.setQuery(query);
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", "Basic " + keyBase64);
+    QNetworkReply *reply = m_nam->get(request);
+    connect(reply, &QNetworkReply::finished, [=](){
+        QJsonObject j = QJsonDocument::fromJson(reply->readAll()).object();
+        QString s = j["d"].toObject()["results"].toArray().first().toObject()["MediaUrl"].toString();
+        if (!s.isEmpty()) //TODO: download and save cover
+            book->setCoverPath(s);
+    });
+}
+
 SabasBook *SabasLibrary::selectedBook() const
 {
     return m_selectedBook;
@@ -196,6 +238,11 @@ SabasBook *SabasLibrary::selectedBook() const
 bool SabasLibrary::isSleepTimerActive() const
 {
     return m_sleepTimer != 0;
+}
+
+bool SabasLibrary::isCoverSearchEnabled() const
+{
+    return !BING_KEY.isEmpty();
 }
 
 void SabasLibrary::saveSettings()

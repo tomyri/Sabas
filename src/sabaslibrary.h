@@ -8,6 +8,7 @@
 
 class QMediaPlayer;
 class QTimer;
+class QNetworkAccessManager;
 class SabasLibrary : public QObject
 {
     Q_OBJECT
@@ -28,6 +29,7 @@ public:
     qint64 trackPosition() const;
     SabasBook *selectedBook() const;
     bool isSleepTimerActive() const;
+    Q_INVOKABLE bool isCoverSearchEnabled() const;
 
 public slots:
     void toggle() const;
@@ -39,6 +41,7 @@ public slots:
     void setTrackPosition(qint64 position);
     void startSleepTimer(int minutes);
     void stopSleepTimer();
+    void searchCover(SabasBook *book, const QString &customSearchString = "");
 
 signals:
     void booksChanged(QList<SabasBook*> books);
@@ -56,6 +59,7 @@ private:
 //    QTimer *m_saveTimer;
     QTimer *m_sleepTimer;
     SabasBook *m_selectedBook;
+    QNetworkAccessManager *m_nam;
     QStringList m_libraryRootPaths;
 };
 
