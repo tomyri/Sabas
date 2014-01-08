@@ -9,6 +9,7 @@ CoverBackground {
         width: parent.width
         text: SabasLibrary.selectedBook && SabasLibrary.selectedBook.coverPath === "" ? SabasLibrary.selectedBook.name : ""
         font.pixelSize: Theme.fontSizeSmall
+        horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.WrapAnywhere
     }
     Image {
