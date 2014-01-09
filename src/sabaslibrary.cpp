@@ -14,11 +14,11 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonArray>
+#include <QStandardPaths>
 
 SabasLibrary::SabasLibrary(QObject *parent) :
     QObject(parent),
     m_player(new QMediaPlayer(this)),
-    //    m_saveTimer(new QTimer(this)),
     m_sleepTimer(0),
     m_selectedBook(0),
     m_nam(0)
@@ -30,21 +30,22 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_player->setNotifyInterval(1000);
     connect(m_player, &QMediaPlayer::stateChanged, [=](QMediaPlayer::State state){
         emit isPlayingChanged(state == QMediaPlayer::PlayingState);
-        //        if (state == QMediaPlayer::PlayingState)
-        //            m_saveTimer->start();
-        //        else
-        //            m_saveTimer->stop();
+
+    });
+    connect(m_player, &QMediaPlayer::mediaStatusChanged, [=](QMediaPlayer::MediaStatus status){
+        if (status == QMediaPlayer::BufferedMedia) {
+            QTimer *s = new QTimer(this);
+            s->setSingleShot(true);
+            s->start(1000);
+            connect(s, &QTimer::timeout, [=](){
+                m_player->setPlaybackRate(m_selectedBook->playbackRate());
+                s->deleteLater();
+            });
+
+        }
     });
     connect(m_player, &QMediaPlayer::durationChanged, this, &SabasLibrary::trackDurationChanged);
     connect(m_player, &QMediaPlayer::positionChanged, this, &SabasLibrary::trackPositionChanged);
-    //    connect(m_saveTimer, &QTimer::timeout, this, &SabasLibrary::saveSettings);
-    //    m_saveTimer->setInterval(60000);
-    //    m_saveTimer->setSingleShot(false);
-    //        for (int k = 0; k < 50; ++k) {
-    //            SabasBook *s = new SabasBook("mooo " + QString::number(k));
-    //            s->setName("mooo " + QString::number(k));
-    //            m_books.append(s);
-    //        }
 }
 
 SabasLibrary::~SabasLibrary()
@@ -139,20 +140,29 @@ void SabasLibrary::play(SabasBook *book, bool fromBeginning)
         m_selectedBook->setLastTrackPosition(m_player->position());
     }
     m_selectedBook = book;
+
+    //Rearrange list
+    m_books.removeOne(m_selectedBook);
+    m_books.prepend(m_selectedBook);
+    foreach (SabasBook *sb, m_books) {
+        sb->emitVissibleDataChangedSignals();
+    }
+
     emit selectedBookChanged(m_selectedBook);
     if (fromBeginning) {
         book->setLastTrackPosition(0);
         book->setLastIndex(0);
     }
     //NOTE: if I set position here, it gets ignored. Didn't find right singnal when to set it, so
-    //lets use helper boolean and set the position when status changed to playing
+    //lets use timer to set the position. Tested all functions that in my mind would make any sense,
+    //most notably, seekable and media status buffered. It's same deal with playbackRate...
     m_player->setPlaylist(book->playlist());
     book->setCurrentIndex(book->lastIndex());
     m_player->play();
     QTimer *s = new QTimer(this);
     s->setSingleShot(true);
     s->start(500);
-    connect(s, &QTimer::timeout, [=](){ //TODO: ok, this works. work out some way to get the right time to set the position
+    connect(s, &QTimer::timeout, [=](){
         m_player->setPosition(m_selectedBook->lastTrackPosition());
         s->deleteLater();
     });
@@ -226,7 +236,7 @@ void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchStrin
         QJsonObject j = QJsonDocument::fromJson(reply->readAll()).object();
         QString s = j["d"].toObject()["results"].toArray().first().toObject()["MediaUrl"].toString();
         if (!s.isEmpty()) //TODO: download and save cover
-            book->setCoverPath(s);
+            downloadCover(s, book);
     });
 }
 
@@ -284,4 +294,32 @@ void SabasLibrary::loadSettings()
         m_books.append(sb);
     }
     s.endArray();
+}
+
+void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
+{
+    QUrl u(url);
+    QNetworkReply *reply = m_nam->get(QNetworkRequest(u));
+    connect(reply, &QNetworkReply::finished, [=](){
+        QFileInfo fi(u.path());
+        fi.setFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation)
+                   + "/cover-" + forBook->name() + "-" + fi.fileName()); //TODO: excape chars!!!
+        QDir fileDir = fi.absoluteDir();
+        if (!fileDir.exists()) {
+            if (!fileDir.mkpath(fileDir.absolutePath())) {
+                qWarning() << "Can't create dir " << fileDir;
+                return;
+            }
+        }
+
+        QFile f(fi.absoluteFilePath());
+        if (!f.open(QFile::WriteOnly)) {
+            qWarning() << "Can't write file " << f.fileName();
+            return;
+        }
+        qDebug() << "Saving filename " << f.fileName();
+        f.write(reply->readAll());
+        f.close();
+        forBook->setCoverPath(f.fileName());
+    });
 }

@@ -48,6 +48,10 @@ Page {
                 fillMode: Image.PreserveAspectFit
                 height: 500
                 anchors.horizontalCenter: parent.horizontalCenter
+                onStatusChanged: {
+                    if (status === Image.Error)
+                        source = "qrc:/img/nocover.png"
+                }
             }
             ProgressBar {
                 minimumValue: 0

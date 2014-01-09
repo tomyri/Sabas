@@ -37,6 +37,9 @@ public:
     void setLastIndex(int lastIndex);
     Q_INVOKABLE int mediaCount() const;
     Q_INVOKABLE QString mediaToDisplayStringAt(int index) const;
+    void setPlaybackRate(qreal rate);
+    qreal playbackRate() const;
+    void emitVissibleDataChangedSignals(); //dirty hack to update qml listview
 
 public slots:
     bool locateMedia();
@@ -62,6 +65,7 @@ private:
     int m_lastIndex;
     qint64 m_lastTrackPosition;
     QString m_coverPath;
+    qreal m_playbackRate;
 };
 
 #endif // SABASBOOK_H

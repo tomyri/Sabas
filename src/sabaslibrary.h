@@ -54,9 +54,9 @@ signals:
 private:
     void saveSettings();
     void loadSettings();
+    void downloadCover(const QString &url, SabasBook *forBook);
     QList<SabasBook*> m_books;
     QMediaPlayer *m_player;
-//    QTimer *m_saveTimer;
     QTimer *m_sleepTimer;
     SabasBook *m_selectedBook;
     QNetworkAccessManager *m_nam;

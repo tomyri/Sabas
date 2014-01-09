@@ -17,6 +17,11 @@ CoverBackground {
         source: SabasLibrary.selectedBook ? SabasLibrary.selectedBook.coverPath : "qrc:/harbour-sabas.png"
         fillMode: SabasLibrary.selectedBook ? Image.PreserveAspectCrop : Image.Pad
         anchors.fill: parent
+        onStatusChanged: {
+            if (status === Image.Error) {
+                label.text = SabasLibrary.selectedBook.name
+            }
+        }
     }
     CoverActionList {
         id: coverAction

@@ -12,7 +12,8 @@ SabasBook::SabasBook(const QString &folder, QObject *parent) :
     m_rootPath(folder),
     m_currentIndex(0),
     m_lastIndex(0),
-    m_lastTrackPosition(0)
+    m_lastTrackPosition(0),
+    m_playbackRate(1)
 {
     connect(m_playlist, &QMediaPlaylist::currentIndexChanged, [=](int index){
         m_currentIndex = index;
@@ -63,7 +64,6 @@ void SabasBook::scanFolder(const QString &folder)
         qSort(files.begin(), files.end(), naturalSort);
         foreach (const QString &f, files) {
             m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(dir.absolutePath() + "/" + f)));
-//            qDebug() << "Added " << QUrl::fromLocalFile(dir.absolutePath() + "/" + f);
         }
     }
 }
@@ -85,6 +85,22 @@ int SabasBook::mediaCount() const
 QString SabasBook::mediaToDisplayStringAt(int index) const
 {
     return m_playlist->media(index).canonicalUrl().toLocalFile().remove(m_rootPath + "/");
+}
+
+void SabasBook::setPlaybackRate(qreal rate)
+{
+    m_playbackRate = rate;
+}
+
+qreal SabasBook::playbackRate() const
+{
+    return m_playbackRate;
+}
+
+void SabasBook::emitVissibleDataChangedSignals()
+{
+    emit nameChanged(m_name);
+    emit coverPathChanged(m_coverPath);
 }
 
 

@@ -10,6 +10,10 @@ Features:
 - Toggle playback from home view.
 - Cover art
 
+TODO:
+- Selection for playback rate
+- Proper cover loading
+
 How To Use It
 =============
 
