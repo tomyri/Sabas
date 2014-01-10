@@ -53,13 +53,19 @@ Page {
                         source = "qrc:/img/nocover.png"
                 }
             }
-            ProgressBar {
+            Slider {
                 minimumValue: 0
                 maximumValue: SabasLibrary.trackDuration
                 value: SabasLibrary.trackPosition
                 width: parent.width
                 valueText: ("%1:%2").arg(parseInt(value / 1000 / 60)).arg(("0" + (value  / 1000 % 60).toFixed(0)).slice(-2))
                 label: qsTr("Track %1").arg(book.currentIndex + 1)
+                onPressedChanged: {
+                    if (!pressed) {
+                        SabasLibrary.trackPosition = value
+                        value  = Qt.binding(function() {return SabasLibrary.trackPosition});
+                    }
+                }
             }
             Row {
                 id: buttonRow
