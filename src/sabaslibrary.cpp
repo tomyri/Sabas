@@ -313,7 +313,7 @@ void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
     connect(reply, &QNetworkReply::finished, [=](){
         QFileInfo fi(u.path());
         fi.setFile(QStandardPaths::writableLocation(QStandardPaths::CacheLocation)
-                   + "/cover-" + forBook->name() + "-" + fi.fileName()); //TODO: excape chars!!!
+                   + "/cover-" + forBook->name().toLatin1().toPercentEncoding("", "~.", '_') + "-" + fi.fileName());
         QDir fileDir = fi.absoluteDir();
         if (!fileDir.exists()) {
             if (!fileDir.mkpath(fileDir.absolutePath())) {
