@@ -33,9 +33,14 @@ Page {
                 MenuItem {
                     text: qsTr("Start from beginning")
                     onClicked: {
-                        var book = SabasLibrary.at(index)
-                        SabasLibrary.play(book, true)
-                        pageStack.push("PlayerPage.qml", {"book":book})
+                        remorse.execute(delegate, qsTr("Starting from beginning"), function() {
+                            var book = SabasLibrary.at(index)
+                            SabasLibrary.play(book, true)
+                            pageStack.push("PlayerPage.qml", {"book":book})
+                        })
+                    }
+                    RemorseItem {
+                        id: remorse
                     }
                 }
                 MenuItem {
@@ -54,6 +59,7 @@ Page {
                         var book = SabasLibrary.at(index)
                         SabasLibrary.searchCover(book)
                     }
+                    visible: SabasLibrary.isCoverSearchEnabled()
                 }
                 MenuItem {
                     text: qsTr("Rescan media")
