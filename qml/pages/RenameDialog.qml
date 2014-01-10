@@ -17,6 +17,8 @@ Dialog {
         }
         TextField {
             id: textField
+            width: parent.width
         }
     }
+    canAccept: textField.text !== ""
 }
