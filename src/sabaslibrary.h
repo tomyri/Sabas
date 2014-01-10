@@ -61,6 +61,7 @@ private:
     SabasBook *m_selectedBook;
     QNetworkAccessManager *m_nam;
     QStringList m_libraryRootPaths;
+    QTimer *m_saveTimer;
 };
 
 #endif // SABASLIBRARY_H

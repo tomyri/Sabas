@@ -21,7 +21,8 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_player(new QMediaPlayer(this)),
     m_sleepTimer(0),
     m_selectedBook(0),
-    m_nam(0)
+    m_nam(0),
+    m_saveTimer(0)
 {
     m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
     loadSettings();
@@ -30,7 +31,6 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_player->setNotifyInterval(1000);
     connect(m_player, &QMediaPlayer::stateChanged, [=](QMediaPlayer::State state){
         emit isPlayingChanged(state == QMediaPlayer::PlayingState);
-
     });
     connect(m_player, &QMediaPlayer::mediaStatusChanged, [=](QMediaPlayer::MediaStatus status){
         if (status == QMediaPlayer::BufferedMedia) {
@@ -127,6 +127,9 @@ void SabasLibrary::stop()
     m_selectedBook = 0;
     emit selectedBookChanged(0);
     saveSettings();
+    m_saveTimer->stop();
+    m_saveTimer->deleteLater();
+    m_saveTimer = 0;
 }
 
 void SabasLibrary::pause()
@@ -166,6 +169,12 @@ void SabasLibrary::play(SabasBook *book, bool fromBeginning)
         m_player->setPosition(m_selectedBook->lastTrackPosition());
         s->deleteLater();
     });
+    if (m_saveTimer == 0)
+        m_saveTimer = new QTimer(this);
+    m_saveTimer->setInterval(1000 * 30);
+    m_saveTimer->setSingleShot(false);
+    connect(m_saveTimer, &QTimer::timeout, this, &SabasLibrary::saveSettings);
+    m_saveTimer->start();
 }
 
 qint64 SabasLibrary::trackDuration() const
@@ -257,6 +266,7 @@ bool SabasLibrary::isCoverSearchEnabled() const
 
 void SabasLibrary::saveSettings()
 {
+    qDebug() << "Saving settings";
     QSettings s;
     s.beginWriteArray("books");
     for (int k = 0; k < m_books.size(); ++k) {
