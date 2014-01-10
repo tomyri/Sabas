@@ -58,17 +58,27 @@
         <translation>Alota alusta</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="42"/>
+        <location filename="../qml/pages/LibraryPage.qml" line="36"/>
+        <source>Starting from beginning</source>
+        <translation>Aloitetaan alusta</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LibraryPage.qml" line="47"/>
         <source>Rename</source>
         <translation>Uudelleennimeä</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="45"/>
+        <location filename="../qml/pages/LibraryPage.qml" line="50"/>
         <source>Book name</source>
         <translation>Kirjan nimi</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="52"/>
+        <location filename="../qml/pages/LibraryPage.qml" line="57"/>
+        <source>Find cover</source>
+        <translation>Etsi kansikuva</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LibraryPage.qml" line="65"/>
         <source>Rescan media</source>
         <translation>Etsi media uudelleen</translation>
     </message>
@@ -91,7 +101,7 @@
         <translation>Valitse raita</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="58"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="62"/>
         <source>Track %1</source>
         <translation>Raita %1</translation>
     </message>
