@@ -87,6 +87,7 @@ void SabasLibrary::scanNewBooks()
             if (alreadyThere)
                 continue;
             SabasBook *book = new SabasBook(parentDir.absolutePath() + "/" + s);
+            QQmlEngine::setObjectOwnership(book, QQmlEngine::CppOwnership);
             book->setName(s);
             if (book->locateMedia())
                 m_books.append(book);
