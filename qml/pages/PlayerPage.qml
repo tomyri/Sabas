@@ -58,7 +58,7 @@ Page {
                 maximumValue: SabasLibrary.trackDuration
                 value: SabasLibrary.trackPosition
                 width: parent.width
-                valueText: ("%1:%2").arg(parseInt(value / 1000 / 60)).arg(("0" + (value  / 1000 % 60).toFixed(0)).slice(-2))
+                valueText: ("%1:%2").arg(parseInt(value / 1000 / 60)).arg(("0" + parseInt(value  / 1000 % 60)).slice(-2))
                 label: qsTr("Track %1").arg(book.currentIndex + 1)
                 onPressedChanged: {
                     if (!pressed) {
