@@ -3,9 +3,9 @@
 
 #include <QObject>
 
+//#define SAVE_PLAYLIST
 class QMediaPlaylist;
 class QMediaPlayer;
-
 class SabasBook : public QObject
 {
     Q_OBJECT
@@ -26,9 +26,10 @@ public:
     void setRootPath(const QString &rootPath);
 
     QMediaPlaylist *playlist() const;
+#ifdef SAVE_PLAYLIST
     QStringList playListStrings() const;
     void setPlaylist(const QStringList &tracks);
-
+#endif
     int currentIndex() const;
     void setCurrentIndex(int index);
     QString coverPath() const;

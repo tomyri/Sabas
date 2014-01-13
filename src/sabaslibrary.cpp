@@ -15,6 +15,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QStandardPaths>
+#include <QTime>
 
 SabasLibrary::SabasLibrary(QObject *parent) :
     QObject(parent),
@@ -25,9 +26,11 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_saveTimer(0)
 {
     m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
+    QTime time = QTime::currentTime();
     loadSettings();
     scanNewBooks();
     saveSettings();
+    qDebug() << "Loading took " << QTime::currentTime().msecsTo(time) << "msec";
     m_player->setNotifyInterval(1000);
     connect(m_player, &QMediaPlayer::stateChanged, [=](QMediaPlayer::State state){
         emit isPlayingChanged(state == QMediaPlayer::PlayingState);
@@ -278,7 +281,9 @@ void SabasLibrary::saveSettings()
         s.setValue("lastIndex", sb->lastIndex());
         s.setValue("lastTrackPosition", sb->lastTrackPosition());
         s.setValue("coverPath", sb->coverPath());
+#ifdef SAVE_PLAYLIST
         s.setValue("playlist", sb->playListStrings());
+#endif
     }
     s.endArray();
 }
@@ -301,8 +306,14 @@ void SabasLibrary::loadSettings()
         sb->setLastIndex(s.value("lastIndex").toInt());
         sb->setLastTrackPosition(s.value("lastTrackPosition").toLongLong());
         sb->setCoverPath(s.value("coverPath").toString());
+#ifdef SAVE_PLAYLIST
         sb->setPlaylist(s.value("playlist").toStringList());
-        m_books.append(sb);
+#else
+        if (sb->locateMedia())
+            m_books.append(sb);
+        else
+            delete sb;
+#endif
     }
     s.endArray();
 }

@@ -117,7 +117,7 @@ QMediaPlaylist *SabasBook::playlist() const
 {
     return m_playlist;
 }
-
+#ifdef SAVE_PLAYLIST
 QStringList SabasBook::playListStrings() const
 {
     QStringList ret;
@@ -133,6 +133,7 @@ void SabasBook::setPlaylist(const QStringList &tracks)
         m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(f)));
     }
 }
+#endif
 
 bool SabasBook::locateMedia()
 {
