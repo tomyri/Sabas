@@ -7,12 +7,18 @@ Dialog {
     property var book
     id: dialog
     DialogHeader {
+        id: header
         acceptText: qsTr("Play selected")
+        z: 3
     }
     SilicaListView {
         id: listView
         model: book.mediaCount()
-        anchors.fill: parent
+        width: parent.width
+        anchors {
+            bottom: parent.bottom
+            top: header.bottom
+        }
         focus: true
         delegate: ListItem {
             id: delegate
@@ -22,6 +28,7 @@ Dialog {
                 id: indexLabel
                 text: "%1: ".arg(index + 1)
                 color: mediaIndex == index ? Theme.highlightColor : Theme.primaryColor
+                anchors.verticalCenter: parent.verticalCenter
             }
 
             Label {
@@ -30,8 +37,11 @@ Dialog {
                 width: parent.width
                 elide: Text.ElideLeft
                 font.pixelSize: Theme.fontSizeSmall
-                anchors.left: indexLabel.right
-                anchors.right: parent.right
+                anchors {
+                    left: indexLabel.right
+                    right: parent.right
+                    verticalCenter: parent.verticalCenter
+                }
             }
             onClicked: {
                 mediaIndex = index

@@ -15,7 +15,6 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QStandardPaths>
-#include <QTime>
 
 SabasLibrary::SabasLibrary(QObject *parent) :
     QObject(parent),
@@ -26,11 +25,9 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_saveTimer(0)
 {
     m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
-    QTime time = QTime::currentTime();
     loadSettings();
     scanNewBooks();
     saveSettings();
-    qDebug() << "Loading took " << QTime::currentTime().msecsTo(time) << "msec";
     m_player->setNotifyInterval(1000);
     connect(m_player, &QMediaPlayer::stateChanged, [=](QMediaPlayer::State state){
         emit isPlayingChanged(state == QMediaPlayer::PlayingState);
@@ -41,7 +38,8 @@ SabasLibrary::SabasLibrary(QObject *parent) :
             s->setSingleShot(true);
             s->start(1000);
             connect(s, &QTimer::timeout, [=](){
-                m_player->setPlaybackRate(m_selectedBook->playbackRate());
+                if (m_selectedBook != 0)
+                    m_player->setPlaybackRate(m_selectedBook->playbackRate());
                 s->deleteLater();
             });
 
@@ -130,10 +128,10 @@ void SabasLibrary::stop()
     m_player->setPlaylist(0);
     m_selectedBook = 0;
     emit selectedBookChanged(0);
-    saveSettings();
     m_saveTimer->stop();
     m_saveTimer->deleteLater();
     m_saveTimer = 0;
+    saveSettings();
 }
 
 void SabasLibrary::pause()
@@ -170,7 +168,8 @@ void SabasLibrary::play(SabasBook *book, bool fromBeginning)
     s->setSingleShot(true);
     s->start(500);
     connect(s, &QTimer::timeout, [=](){
-        m_player->setPosition(m_selectedBook->lastTrackPosition());
+        if (m_selectedBook != 0) //check if already stopped
+            m_player->setPosition(m_selectedBook->lastTrackPosition());
         s->deleteLater();
     });
     if (m_saveTimer == 0)

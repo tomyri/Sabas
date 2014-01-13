@@ -14,7 +14,7 @@ Name:       harbour-sabas
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Sabas is AudioBook Application for Sailfish
 Version:    0.2
-Release:    2
+Release:    3
 Group:      Qt/Qt
 License:    LICENSE
 Source0:    %{name}-%{version}.tar.bz2

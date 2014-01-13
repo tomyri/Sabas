@@ -13,7 +13,7 @@ Page {
                 onClicked: {
                     SabasLibrary.stopSleepTimer()
                 }
-                enabled: SabasLibrary.isSleepTimerActive
+                visible: SabasLibrary.isSleepTimerActive
             }
             MenuItem {
                 text: qsTr("Sleep timer")
@@ -94,6 +94,5 @@ Page {
             }
         }
     }
-    Component.onCompleted: SabasLibrary.play(book)
     Component.onDestruction: SabasLibrary.stop()
 }

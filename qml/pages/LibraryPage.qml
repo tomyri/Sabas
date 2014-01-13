@@ -28,7 +28,9 @@ Page {
         }
         delegate: ListItem {
             id: delegate
-            x: Theme.paddingLarge
+            width: parent.width
+            anchors.leftMargin: Theme.paddingLarge
+            anchors.rightMargin: Theme.paddingLarge
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Start from beginning")
@@ -72,6 +74,7 @@ Page {
             Row {
                 spacing: 10
                 anchors.verticalCenter: parent.verticalCenter
+                width: parent.width
                 Image {
                     id: cover
                     source: SabasLibrary.at(index).coverPath
@@ -80,14 +83,16 @@ Page {
                     width: 50
                 }
                 Label {
-                    x: Theme.paddingLarge
                     text: SabasLibrary.at(index).name
                     color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                     anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - cover.width
+                    elide: Text.ElideRight
                 }
             }
             onClicked: {
                 var book = SabasLibrary.at(index)
+                SabasLibrary.play(book)
                 pageStack.push("PlayerPage.qml", {"book":book})
             }
         }
