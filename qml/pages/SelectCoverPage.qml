@@ -9,7 +9,7 @@ Page {
     id: dialog
     PageHeader {
         id: header
-        title: qsTr("Select Cover")
+        title: qsTr("Select cover")
     }
     Item {
         id: searchRow

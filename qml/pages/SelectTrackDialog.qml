@@ -9,7 +9,6 @@ Dialog {
     DialogHeader {
         id: header
         acceptText: qsTr("Play selected")
-        z: 3
     }
     SilicaListView {
         id: listView

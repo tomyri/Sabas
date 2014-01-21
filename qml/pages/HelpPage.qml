@@ -32,7 +32,7 @@ Page {
             Label {
                 wrapMode: Text.WordWrap
                 width: parent.width
-                text: qsTr("Playback position of each book is saved. If you want to start it from beginning, tab and hold that book and select that option from context menu. There is also an option for renameing the book.")
+                text: qsTr("Playback position of each book is saved. If you want to start it from beginning, tab and hold that book and select that option from context menu. There is also an option for renameing the book or downloading a cover.")
             }
         }
     }
