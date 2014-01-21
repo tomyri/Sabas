@@ -19,6 +19,16 @@ Page {
                 text: qsTr("Help")
                 onClicked: pageStack.push("HelpPage.qml")
             }
+            MenuItem {
+                id: missingCoverSearch
+                text: qsTr("Find missing covers")
+                enabled: false
+                visible: SabasLibrary.isCoverSearchEnabled()
+                onClicked: {
+                    enabled  = false
+                    SabasLibrary.searchMissingCovers()
+                }
+            }
         }
         id: listView
         model: SabasLibrary.count()
@@ -56,10 +66,10 @@ Page {
                     }
                 }
                 MenuItem {
-                    text: qsTr("Find cover")
+                    text: qsTr("Cover search")
                     onClicked: {
                         var book = SabasLibrary.at(index)
-                        SabasLibrary.searchCover(book)
+                        pageStack.push("SelectCoverPage.qml", {"book":book})
                     }
                     visible: SabasLibrary.isCoverSearchEnabled()
                 }
@@ -68,6 +78,12 @@ Page {
                     onClicked: {
                         var book = SabasLibrary.at(index)
                         book.relocateMedia()
+                    }
+                }
+                Component.onCompleted: {
+                    if (SabasLibrary.at(index).coverPath === "") {
+                        missingCoverSearch.enabled = true
+                        console.debug("Cover missing")
                     }
                 }
             }

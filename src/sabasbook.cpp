@@ -67,6 +67,11 @@ void SabasBook::scanFolder(const QString &folder)
         }
     }
 }
+QStringList SabasBook::possibleCovers() const
+{
+    return m_possibleCovers;
+}
+
 int SabasBook::lastIndex() const
 {
     return m_lastIndex;
@@ -159,11 +164,19 @@ void SabasBook::previous()
     m_playlist->previous();
 }
 
-void SabasBook::setCoverPath(QString path)
+void SabasBook::setCoverPath(const QString &path)
 {
     if (m_coverPath != path) {
         m_coverPath = path;
         emit coverPathChanged(path);
+    }
+}
+
+void SabasBook::setPossibleCovers(const QStringList &coverUrls)
+{
+    if (m_possibleCovers != coverUrls) {
+        m_possibleCovers = coverUrls;
+        emit possibleCoversChanged(coverUrls);
     }
 }
 

@@ -220,12 +220,14 @@ void SabasLibrary::stopSleepTimer()
     emit sleepTimerActivityChanged(false);
 }
 
-void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchString)
+void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchString, bool feelingLucky)
 {
     if (!isCoverSearchEnabled())
         return;
     if (m_nam == 0)
         m_nam = new QNetworkAccessManager(this);
+    m_searchingCover = true;
+    emit searchingCoverChanged(m_searchingCover);
     QByteArray keyBase64 = BING_KEY + ":" + BING_KEY;
     keyBase64 = keyBase64.toBase64();
     QString searchString;
@@ -238,7 +240,8 @@ void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchStrin
     QUrlQuery query;
     query.addQueryItem("Query", QUrl(searchString).toEncoded());
     query.addQueryItem("$format", "json");
-    query.addQueryItem("$top", "1");
+    if (feelingLucky)
+        query.addQueryItem("$top", "1");
     QUrl url("https://api.datamarket.azure.com/Bing/Search/Image");
     url.setQuery(query);
     QNetworkRequest request(url);
@@ -246,10 +249,31 @@ void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchStrin
     QNetworkReply *reply = m_nam->get(request);
     connect(reply, &QNetworkReply::finished, [=](){
         QJsonObject j = QJsonDocument::fromJson(reply->readAll()).object();
-        QString s = j["d"].toObject()["results"].toArray().first().toObject()["MediaUrl"].toString();
-        if (!s.isEmpty()) //TODO: download and save cover
-            downloadCover(s, book);
+        QJsonArray imageObjets = j["d"].toObject()["results"].toArray();
+        if (feelingLucky) {
+            QString s = imageObjets.first().toObject()["MediaUrl"].toString();
+            if (!s.isEmpty())
+                downloadCover(s, book);
+        } else {
+            QStringList urls;
+            foreach (QJsonValue v, imageObjets) {
+                QString s = v.toObject()["MediaUrl"].toString();
+                if (!s.isEmpty())
+                    urls.append(s);
+            }
+            book->setPossibleCovers(urls);
+        }
+        m_searchingCover = false;
+        emit searchingCoverChanged(m_searchingCover);
     });
+}
+
+void SabasLibrary::searchMissingCovers()
+{
+    foreach (SabasBook *sb, m_books) {
+        if (sb->coverPath().isEmpty())
+            searchCover(sb);
+    }
 }
 
 SabasBook *SabasLibrary::selectedBook() const
@@ -265,6 +289,11 @@ bool SabasLibrary::isSleepTimerActive() const
 bool SabasLibrary::isCoverSearchEnabled() const
 {
     return !BING_KEY.isEmpty();
+}
+
+bool SabasLibrary::searchingCover() const
+{
+    return m_searchingCover;
 }
 
 void SabasLibrary::saveSettings()
@@ -300,19 +329,23 @@ void SabasLibrary::loadSettings()
             continue;
         }
         SabasBook *sb = new SabasBook(rootPath);
+#ifdef SAVE_PLAYLIST
+        sb->setPlaylist(s.value("playlist").toStringList());
+#else
+        if (sb->locateMedia()) {
+            m_books.append(sb);
+        } else {
+            delete sb;
+            continue;
+        }
+#endif
         QQmlEngine::setObjectOwnership(sb, QQmlEngine::CppOwnership);
         sb->setName(s.value("name").toString());
         sb->setLastIndex(s.value("lastIndex").toInt());
         sb->setLastTrackPosition(s.value("lastTrackPosition").toLongLong());
-        sb->setCoverPath(s.value("coverPath").toString());
-#ifdef SAVE_PLAYLIST
-        sb->setPlaylist(s.value("playlist").toStringList());
-#else
-        if (sb->locateMedia())
-            m_books.append(sb);
-        else
-            delete sb;
-#endif
+        QString savedCover = s.value("coverPath").toString();
+        if (!savedCover.isEmpty())
+            sb->setCoverPath(savedCover);
     }
     s.endArray();
 }

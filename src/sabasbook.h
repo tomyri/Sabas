@@ -2,6 +2,7 @@
 #define SABASBOOK_H
 
 #include <QObject>
+#include <QStringList>
 
 //#define SAVE_PLAYLIST
 class QMediaPlaylist;
@@ -12,6 +13,7 @@ class SabasBook : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(QString coverPath READ coverPath NOTIFY coverPathChanged)
+    Q_PROPERTY(QStringList possibleCovers READ possibleCovers WRITE setPossibleCovers NOTIFY possibleCoversChanged)
 
 public:
     explicit SabasBook(const QString &folder, QObject *parent = 0);
@@ -42,13 +44,16 @@ public:
     qreal playbackRate() const;
     void emitVissibleDataChangedSignals(); //dirty hack to update qml listview
 
+    QStringList possibleCovers() const;
+
 public slots:
     bool locateMedia();
     bool relocateMedia();
     void setLastTrackPosition(qint64 position);
     void next();
     void previous();
-    void setCoverPath(QString path);
+    void setCoverPath(const QString &path);
+    void setPossibleCovers(const QStringList &coverUrls);
 
 signals:
     void nameChanged(const QString &name);
@@ -56,6 +61,8 @@ signals:
     void trackDurationChanged(qint64 position);
     void currentIndexChanged(int index);
     void coverPathChanged(QString path);
+
+    void possibleCoversChanged(QStringList arg);
 
 private:
     void scanFolder(const QString &folder);
@@ -67,6 +74,7 @@ private:
     qint64 m_lastTrackPosition;
     QString m_coverPath;
     qreal m_playbackRate;
+    QStringList m_possibleCovers;
 };
 
 #endif // SABASBOOK_H

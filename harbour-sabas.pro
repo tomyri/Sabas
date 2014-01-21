@@ -27,7 +27,9 @@ OTHER_FILES += qml/harbour-sabas.qml \
     qml/pages/RenameDialog.qml \
     qml/pages/SleepTimeDialog.qml \
     qml/pages/HelpPage.qml \
-    qml/pages/SelectTrackDialog.qml
+    qml/pages/SelectTrackDialog.qml \
+    qml/pages/SelectCoverPage.qml \
+    qml/pages/DownloadCoverDialog.qml
 
 HEADERS += \
     src/sabasplugin.h \

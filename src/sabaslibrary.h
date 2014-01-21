@@ -17,6 +17,7 @@ class SabasLibrary : public QObject
     Q_PROPERTY(qint64 trackPosition READ trackPosition WRITE setTrackPosition NOTIFY trackPositionChanged)
     Q_PROPERTY(SabasBook* selectedBook READ selectedBook NOTIFY selectedBookChanged)
     Q_PROPERTY(bool isSleepTimerActive READ isSleepTimerActive NOTIFY sleepTimerActivityChanged)
+    Q_PROPERTY(bool searchingCover READ searchingCover NOTIFY searchingCoverChanged)
 
 public:
     explicit SabasLibrary(QObject *parent = 0);
@@ -30,6 +31,7 @@ public:
     SabasBook *selectedBook() const;
     bool isSleepTimerActive() const;
     Q_INVOKABLE bool isCoverSearchEnabled() const;
+    bool searchingCover() const;
 
 public slots:
     void toggle() const;
@@ -41,7 +43,9 @@ public slots:
     void setTrackPosition(qint64 position);
     void startSleepTimer(int minutes);
     void stopSleepTimer();
-    void searchCover(SabasBook *book, const QString &customSearchString = "");
+    void searchCover(SabasBook *book, const QString &customSearchString = "", bool feelingLucky = true);
+    void searchMissingCovers();
+    void downloadCover(const QString &url, SabasBook *forBook);
 
 signals:
     void booksChanged(QList<SabasBook*> books);
@@ -49,12 +53,12 @@ signals:
     void trackDurationChanged(qint64 duration);
     void trackPositionChanged(qint64 position);
     void selectedBookChanged(SabasBook* book);
-    void sleepTimerActivityChanged(bool isRunning);
+    void sleepTimerActivityChanged(bool isRunning);    
+    void searchingCoverChanged(bool searching);
 
 private:
     void saveSettings();
     void loadSettings();
-    void downloadCover(const QString &url, SabasBook *forBook);
     QList<SabasBook*> m_books;
     QMediaPlayer *m_player;
     QTimer *m_sleepTimer;
@@ -62,6 +66,7 @@ private:
     QNetworkAccessManager *m_nam;
     QStringList m_libraryRootPaths;
     QTimer *m_saveTimer;
+    bool m_searchingCover;
 };
 
 #endif // SABASLIBRARY_H
