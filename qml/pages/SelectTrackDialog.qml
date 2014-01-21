@@ -20,6 +20,8 @@ Dialog {
             top: header.bottom
         }
         focus: true
+        boundsBehavior: Flickable.DragOverBounds
+        clip: true
         delegate: ListItem {
             id: delegate
             width: parent.width
