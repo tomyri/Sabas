@@ -31,7 +31,7 @@ Page {
             }
         }
         id: listView
-        model: SabasLibrary.count()
+        model: SabasLibrary.books
         anchors.fill: parent
         header: PageHeader {
             title: qsTr("Library")
@@ -88,6 +88,7 @@ Page {
                 }
             }
             Row {
+                id: bookLabel
                 spacing: 10
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
@@ -98,17 +99,26 @@ Page {
                     height: parent.height
                     width: 50
                 }
-                Label {
-                    text: SabasLibrary.at(index).name
-                    color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                Column {
                     anchors.verticalCenter: parent.verticalCenter
                     width: parent.width - cover.width
-                    elide: Text.ElideRight
+                    Label {
+                        text: modelData
+                        color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                        elide: Text.ElideRight
+                        width: parent.width
+                    }
+                    Label {
+                        text: qsTr("Current track: %1/%2").arg(SabasLibrary.at(index).currentIndex + 1).arg(SabasLibrary.at(index).trackCount)
+                        color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeTiny
+                        width: parent.width
+                    }
                 }
             }
+
             onClicked: {
                 var book = SabasLibrary.at(index)
-                SabasLibrary.play(book)
                 pageStack.push("PlayerPage.qml", {"book":book})
             }
         }

@@ -12,7 +12,7 @@ Dialog {
     }
     SilicaListView {
         id: listView
-        model: book.mediaCount()
+        model: book.tracks
         width: parent.width
         anchors {
             bottom: parent.bottom
@@ -33,7 +33,7 @@ Dialog {
             }
 
             Label {
-                text: "%1".arg(book.mediaToDisplayStringAt(index))
+                text: "%1".arg(modelData)
                 color: mediaIndex == index ? Theme.highlightColor : Theme.primaryColor
                 width: parent.width
                 elide: Text.ElideLeft

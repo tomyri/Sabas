@@ -6,7 +6,7 @@
 
 //#define SAVE_PLAYLIST
 class QMediaPlaylist;
-class QMediaPlayer;
+class QFileSystemWatcher;
 class SabasBook : public QObject
 {
     Q_OBJECT
@@ -14,6 +14,8 @@ class SabasBook : public QObject
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(QString coverPath READ coverPath NOTIFY coverPathChanged)
     Q_PROPERTY(QStringList possibleCovers READ possibleCovers WRITE setPossibleCovers NOTIFY possibleCoversChanged)
+    Q_PROPERTY(QStringList tracks READ tracks NOTIFY tracksChanged)
+    Q_PROPERTY(int trackCount READ trackCount NOTIFY trackCountChanged)
 
 public:
     explicit SabasBook(const QString &folder, QObject *parent = 0);
@@ -37,18 +39,14 @@ public:
     QString coverPath() const;
 
     int lastIndex() const;
-    void setLastIndex(int lastIndex);
-    Q_INVOKABLE int mediaCount() const;
-    Q_INVOKABLE QString mediaToDisplayStringAt(int index) const;
     void setPlaybackRate(qreal rate);
     qreal playbackRate() const;
-    void emitVissibleDataChangedSignals(); //dirty hack to update qml listview
-
     QStringList possibleCovers() const;
+    QStringList tracks() const;
+    int trackCount() const;
 
 public slots:
-    bool locateMedia();
-    bool relocateMedia();
+    void locateMedia();
     void setLastTrackPosition(qint64 position);
     void next();
     void previous();
@@ -61,20 +59,21 @@ signals:
     void trackDurationChanged(qint64 position);
     void currentIndexChanged(int index);
     void coverPathChanged(QString path);
-
-    void possibleCoversChanged(QStringList arg);
+    void possibleCoversChanged(QStringList covers);
+    void tracksChanged(QStringList tracks);
+    void trackCountChanged(int count);
 
 private:
     void scanFolder(const QString &folder);
     QMediaPlaylist *m_playlist;
     QString m_name;
     QString m_rootPath;
-    int m_currentIndex;
-    int m_lastIndex;
     qint64 m_lastTrackPosition;
     QString m_coverPath;
     qreal m_playbackRate;
     QStringList m_possibleCovers;
+    QFileSystemWatcher *m_fsw;
+    int m_trackCount;
 };
 
 #endif // SABASBOOK_H

@@ -15,6 +15,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QStandardPaths>
+#include <QFileSystemWatcher>
 
 SabasLibrary::SabasLibrary(QObject *parent) :
     QObject(parent),
@@ -22,9 +23,11 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_sleepTimer(0),
     m_selectedBook(0),
     m_nam(0),
-    m_saveTimer(0)
+    m_saveTimer(0),
+    m_fsw(new QFileSystemWatcher(this))
 {
     m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
+    m_fsw->addPaths(m_libraryRootPaths);
     loadSettings();
     scanNewBooks();
     saveSettings();
@@ -47,6 +50,7 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     });
     connect(m_player, &QMediaPlayer::durationChanged, this, &SabasLibrary::trackDurationChanged);
     connect(m_player, &QMediaPlayer::positionChanged, this, &SabasLibrary::trackPositionChanged);
+    connect(m_fsw, &QFileSystemWatcher::directoryChanged, this, &SabasLibrary::scanChanges);
 }
 
 SabasLibrary::~SabasLibrary()
@@ -56,46 +60,9 @@ SabasLibrary::~SabasLibrary()
     qDeleteAll(m_books);
 }
 
-QList<SabasBook*> SabasLibrary::books() const
-{
-    return m_books;
-}
-
-int SabasLibrary::count() const
-{
-    return m_books.size();
-}
-
 SabasBook *SabasLibrary::at(int index)
 {
     return m_books.at(index);
-}
-
-void SabasLibrary::scanNewBooks()
-{
-    foreach (const QString &rootPath, m_libraryRootPaths) {
-        QDir parentDir = QDir(rootPath);
-        QStringList bookStrings = parentDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-        foreach (const QString s, bookStrings) {
-            bool alreadyThere = false;
-            foreach (SabasBook *b, m_books) {
-                if (b->rootPath() == parentDir.absolutePath() + "/" + s) {
-                    alreadyThere = true;
-                    qDebug() << "book already loaded from settings";
-                    break;
-                }
-            }
-            if (alreadyThere)
-                continue;
-            SabasBook *book = new SabasBook(parentDir.absolutePath() + "/" + s);
-            QQmlEngine::setObjectOwnership(book, QQmlEngine::CppOwnership);
-            book->setName(s);
-            if (book->locateMedia())
-                m_books.append(book);
-            else
-                delete book;
-        }
-    }
 }
 
 void SabasLibrary::toggle() const
@@ -122,10 +89,11 @@ void SabasLibrary::stop()
 {
     if (m_selectedBook == 0)
         return;
-    m_selectedBook->setLastIndex(m_selectedBook->currentIndex());
+    int index = m_selectedBook->currentIndex();
     m_selectedBook->setLastTrackPosition(m_player->position());
     m_player->stop();
     m_player->setPlaylist(0);
+    m_selectedBook->setCurrentIndex(index);
     m_selectedBook = 0;
     emit selectedBookChanged(0);
     m_saveTimer->stop();
@@ -149,20 +117,19 @@ void SabasLibrary::play(SabasBook *book, bool fromBeginning)
     //Rearrange list
     m_books.removeOne(m_selectedBook);
     m_books.prepend(m_selectedBook);
-    foreach (SabasBook *sb, m_books) {
-        sb->emitVissibleDataChangedSignals();
-    }
+    emit booksChanged(books());
 
     emit selectedBookChanged(m_selectedBook);
     if (fromBeginning) {
         book->setLastTrackPosition(0);
-        book->setLastIndex(0);
+        book->setCurrentIndex(0);
     }
     //NOTE: if I set position here, it gets ignored. Didn't find right singnal when to set it, so
     //lets use timer to set the position. Tested all functions that in my mind would make any sense,
     //most notably, seekable and media status buffered. It's same deal with playbackRate...
+    int i = book->currentIndex();
     m_player->setPlaylist(book->playlist());
-    book->setCurrentIndex(book->lastIndex());
+    book->setCurrentIndex(i);
     m_player->play();
     QTimer *s = new QTimer(this);
     s->setSingleShot(true);
@@ -306,7 +273,7 @@ void SabasLibrary::saveSettings()
         s.setArrayIndex(k);
         s.setValue("rootPath", sb->rootPath());
         s.setValue("name", sb->name());
-        s.setValue("lastIndex", sb->lastIndex());
+        s.setValue("lastIndex", sb->currentIndex());
         s.setValue("lastTrackPosition", sb->lastTrackPosition());
         s.setValue("coverPath", sb->coverPath());
 #ifdef SAVE_PLAYLIST
@@ -329,25 +296,70 @@ void SabasLibrary::loadSettings()
             continue;
         }
         SabasBook *sb = new SabasBook(rootPath);
+        sb->setName(s.value("name").toString());
 #ifdef SAVE_PLAYLIST
         sb->setPlaylist(s.value("playlist").toStringList());
 #else
-        if (sb->locateMedia()) {
-            m_books.append(sb);
-        } else {
-            delete sb;
-            continue;
-        }
+        sb->locateMedia();
 #endif
+        m_books.append(sb);
+        emit booksChanged(books());
         QQmlEngine::setObjectOwnership(sb, QQmlEngine::CppOwnership);
-        sb->setName(s.value("name").toString());
-        sb->setLastIndex(s.value("lastIndex").toInt());
+        sb->setCurrentIndex(s.value("lastIndex").toInt());
         sb->setLastTrackPosition(s.value("lastTrackPosition").toLongLong());
         QString savedCover = s.value("coverPath").toString();
         if (!savedCover.isEmpty())
             sb->setCoverPath(savedCover);
     }
     s.endArray();
+}
+
+void SabasLibrary::scanNewBooks()
+{
+    foreach (const QString &rootPath, m_libraryRootPaths) {
+        QDir parentDir = QDir(rootPath);
+        QStringList bookStrings = parentDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        foreach (const QString s, bookStrings) {
+            bool alreadyThere = false;
+            foreach (SabasBook *b, m_books) {
+                if (b->rootPath() == parentDir.absolutePath() + "/" + s) {
+                    alreadyThere = true;
+                    qDebug() << "book already loaded from settings";
+                    break;
+                }
+            }
+            if (alreadyThere)
+                continue;
+            SabasBook *book = new SabasBook(parentDir.absolutePath() + "/" + s);
+            QQmlEngine::setObjectOwnership(book, QQmlEngine::CppOwnership);
+            book->setName(s);
+            book->locateMedia();
+            m_books.append(book);
+            emit booksChanged(books());
+        }
+    }
+}
+
+void SabasLibrary::scanDeletedBooks()
+{
+    foreach (SabasBook *sb, m_books) {
+        if (!QDir(sb->rootPath()).exists()) {
+            if (m_selectedBook == sb) {
+                m_selectedBook = 0;
+                emit selectedBookChanged(0);
+            }
+            m_books.removeOne(sb);
+            emit booksChanged(books());
+            sb->deleteLater();
+        }
+    }
+}
+
+void SabasLibrary::scanChanges(const QString &path)
+{
+    Q_UNUSED(path)
+    scanNewBooks();
+    scanDeletedBooks();
 }
 
 void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
@@ -376,4 +388,13 @@ void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
         f.close();
         forBook->setCoverPath(f.fileName());
     });
+}
+
+QStringList SabasLibrary::books() const
+{
+    QStringList names;
+    foreach (SabasBook *sb, m_books) {
+        names.append(sb->name());
+    }
+    return names;
 }

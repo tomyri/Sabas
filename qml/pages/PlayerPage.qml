@@ -3,6 +3,10 @@ import Sailfish.Silica 1.0
 import harbour.sabas.sabasplugin 1.0
 
 Page {
+    function prettyTimeFromMsec(msec) {
+        return ("%1:%2").arg(parseInt(msec / 1000 / 60)).arg(("0" + parseInt(msec  / 1000 % 60)).slice(-2))
+    }
+
     id: page
     property var book
     SilicaFlickable {
@@ -58,8 +62,8 @@ Page {
                 maximumValue: SabasLibrary.trackDuration
                 value: SabasLibrary.trackPosition
                 width: parent.width
-                valueText: ("%1:%2").arg(parseInt(value / 1000 / 60)).arg(("0" + parseInt(value  / 1000 % 60)).slice(-2))
-                label: qsTr("Track %1").arg(book.currentIndex + 1)
+                valueText: prettyTimeFromMsec(value)
+                label: qsTr("Track: %1, Duration: %2").arg(book.currentIndex + 1).arg(prettyTimeFromMsec(SabasLibrary.trackDuration))
                 onPressedChanged: {
                     if (!pressed) {
                         SabasLibrary.trackPosition = value
@@ -95,4 +99,5 @@ Page {
         }
     }
     Component.onDestruction: SabasLibrary.stop()
+    Component.onCompleted: SabasLibrary.play(book)
 }
