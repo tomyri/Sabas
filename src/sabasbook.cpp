@@ -51,21 +51,20 @@ void SabasBook::scanFolder(const QString &folder)
     if (!coverFiles.isEmpty()) {
         setCoverPath(dir.absolutePath() + "/" + coverFiles.first());
     }
+    QStringList filters;
+    filters << "*.mp3" << "*.ogg" << "*.m4a" << "*.flac" << "*.acc" << "*.mp4" << "*.3gp";
+    QStringList files = dir.entryList(filters, QDir::Files);
+    qSort(files.begin(), files.end(), naturalSort);
+    foreach (const QString &f, files) {
+        m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(dir.absolutePath() + "/" + f)));
+        emit tracksChanged(tracks());
+        emit trackCountChanged(trackCount());
+    }
     QStringList folders = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
     if (!folders.isEmpty()) {
         qSort(folders.begin(), folders.end(), naturalSort);
         foreach (const QString &f, folders) {
             scanFolder(dir.absolutePath() + "/" + f);
-        }
-    } else {
-        QStringList filters;
-        filters << "*.mp3" << "*.ogg" << "*.m4a" << "*.flac" << "*.acc" << "*.mp4" << "*.3gp";
-        QStringList files = dir.entryList(filters, QDir::Files);
-        qSort(files.begin(), files.end(), naturalSort);
-        foreach (const QString &f, files) {
-            m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(dir.absolutePath() + "/" + f)));
-            emit tracksChanged(tracks());
-            emit trackCountChanged(trackCount());
         }
     }
 }
