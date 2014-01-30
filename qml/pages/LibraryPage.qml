@@ -73,13 +73,6 @@ Page {
                     }
                     visible: SabasLibrary.isCoverSearchEnabled()
                 }
-                MenuItem {
-                    text: qsTr("Rescan media")
-                    onClicked: {
-                        var book = SabasLibrary.at(index)
-                        book.relocateMedia()
-                    }
-                }
                 Component.onCompleted: {
                     if (SabasLibrary.at(index).coverPath === "") {
                         missingCoverSearch.enabled = true
