@@ -95,6 +95,11 @@
         <translation>Kansihaku</translation>
     </message>
     <message>
+        <location filename="../qml/pages/LibraryPage.qml" line="112"/>
+        <source>Track: %1/%2</source>
+        <translation>Raita: %1/%2</translation>
+    </message>
+    <message>
         <source>Find cover</source>
         <translation type="vanished">Etsi kansikuva</translation>
     </message>
@@ -107,24 +112,28 @@
 <context>
     <name>PlayerPage</name>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="12"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="16"/>
         <source>Stop sleep timer</source>
         <translation>Sulje uniajastin</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="19"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="23"/>
         <source>Sleep timer</source>
         <translation>Uniajastin</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="28"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="32"/>
         <source>Select track</source>
         <translation>Valitse raita</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="62"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="66"/>
+        <source>Track: %1, Duration: %2</source>
+        <translation>Raita: %1, Kesto: %2</translation>
+    </message>
+    <message>
         <source>Track %1</source>
-        <translation>Raita %1</translation>
+        <translation type="vanished">Raita %1</translation>
     </message>
 </context>
 <context>
@@ -138,8 +147,12 @@
 <context>
     <name>SelectCoverPage</name>
     <message>
-        <location filename="../qml/pages/SelectCoverPage.qml" line="12"/>
         <source>Select Cover</source>
+        <translation type="vanished">Valitse kansi</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SelectCoverPage.qml" line="12"/>
+        <source>Select cover</source>
         <translation>Valitse kansi</translation>
     </message>
 </context>

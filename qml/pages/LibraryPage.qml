@@ -109,7 +109,7 @@ Page {
                         width: parent.width
                     }
                     Label {
-                        text: qsTr("Current track: %1/%2").arg(SabasLibrary.at(index).currentIndex + 1).arg(SabasLibrary.at(index).trackCount)
+                        text: qsTr("Track: %1/%2").arg(SabasLibrary.at(index).currentIndex + 1).arg(SabasLibrary.at(index).trackCount)
                         color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                         font.pixelSize: Theme.fontSizeTiny
                         width: parent.width
