@@ -4,9 +4,8 @@
 <context>
     <name>DownloadCoverDialog</name>
     <message>
-        <location filename="../qml/pages/DownloadCoverDialog.qml" line="10"/>
         <source>Download selected</source>
-        <translation>Lataa valittu</translation>
+        <translation type="vanished">Lataa valittu</translation>
     </message>
 </context>
 <context>
@@ -91,11 +90,15 @@
     </message>
     <message>
         <location filename="../qml/pages/LibraryPage.qml" line="69"/>
-        <source>Cover search</source>
-        <translation>Kansihaku</translation>
+        <source>Select cover</source>
+        <translation>Valitse kansi</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="112"/>
+        <source>Cover search</source>
+        <translation type="vanished">Kansihaku</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/LibraryPage.qml" line="105"/>
         <source>Track: %1/%2</source>
         <translation>Raita: %1/%2</translation>
     </message>
@@ -104,9 +107,8 @@
         <translation type="vanished">Etsi kansikuva</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="77"/>
         <source>Rescan media</source>
-        <translation>Etsi media uudelleen</translation>
+        <translation type="vanished">Etsi media uudelleen</translation>
     </message>
 </context>
 <context>
@@ -151,9 +153,14 @@
         <translation type="vanished">Valitse kansi</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SelectCoverPage.qml" line="12"/>
+        <location filename="../qml/pages/SelectCoverPage.qml" line="17"/>
         <source>Select cover</source>
         <translation>Valitse kansi</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SelectCoverPage.qml" line="72"/>
+        <source>Local</source>
+        <translation>Paikallinen</translation>
     </message>
 </context>
 <context>
@@ -175,6 +182,14 @@
         <location filename="../qml/pages/SleepTimeDialog.qml" line="15"/>
         <source>Stop playing after %1 minutes</source>
         <translation>Keskeytä toisto %1 minuutin kuluttua</translation>
+    </message>
+</context>
+<context>
+    <name>UseCoverDialog</name>
+    <message>
+        <location filename="../qml/pages/UseCoverDialog.qml" line="10"/>
+        <source>Use this cover</source>
+        <translation>Käytä tätä kantta</translation>
     </message>
 </context>
 </TS>
