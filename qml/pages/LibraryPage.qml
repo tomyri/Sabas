@@ -66,7 +66,7 @@ Page {
                     }
                 }
                 MenuItem {
-                    text: qsTr("Cover search")
+                    text: qsTr("Select cover")
                     onClicked: {
                         var book = SabasLibrary.at(index)
                         pageStack.push("SelectCoverPage.qml", {"book":book})

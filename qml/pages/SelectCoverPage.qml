@@ -3,10 +3,15 @@ import Sailfish.Silica 1.0
 import harbour.sabas.sabasplugin 1.0
 
 Page {
+    function isLocalCover(url) {
+        var pre = "file://";
+        return (url.substring(0, pre.length) === pre);
+    }
+
     property var book
     property int selectedIndex
     property bool coverSelected: false
-    id: dialog
+    id: page
     PageHeader {
         id: header
         title: qsTr("Select cover")
@@ -63,12 +68,25 @@ Page {
             fillMode: Image.PreserveAspectCrop
             width: grid.cellWidth
             height: grid.cellHeight
+            Label {
+                text: qsTr("Local")
+                font.bold: true
+                color: Theme.highlightColor
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: parent.bottom
+                }
+                visible: isLocalCover(image.source.toString())
+            }
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    var dialog = pageStack.push("DownloadCoverDialog.qml", {"url":image.source})
-                    dialog.accepted.connect(function() {
-                        SabasLibrary.downloadCover(image.source, book)
+                    var dialog = pageStack.push("UseCoverDialog.qml", {"url":image.source})
+                    dialog.accepted.connect(function () {
+                        if (isLocalCover(image.source.toString()))
+                            book.setCoverPath(image.source)
+                        else
+                            SabasLibrary.downloadCover(image.source, book)
                         coverSelected = true
                     })
                 }

@@ -24,6 +24,7 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     m_selectedBook(0),
     m_nam(0),
     m_saveTimer(0),
+    m_searchingCover(false),
     m_fsw(new QFileSystemWatcher(this))
 {
     m_libraryRootPaths << QDir::homePath() + "/Audiobooks" << QDir::homePath() + "/Documents/Audiobooks";
@@ -228,7 +229,7 @@ void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchStrin
                 if (!s.isEmpty())
                     urls.append(s);
             }
-            book->setPossibleCovers(urls);
+            book->setOnlineCovers(urls);
         }
         m_searchingCover = false;
         emit searchingCoverChanged(m_searchingCover);
@@ -275,6 +276,7 @@ void SabasLibrary::saveSettings()
         s.setValue("name", sb->name());
         s.setValue("lastIndex", sb->currentIndex());
         s.setValue("lastTrackPosition", sb->lastTrackPosition());
+        s.setValue("localCovers", sb->localCovers());
         s.setValue("coverPath", sb->coverPath());
 #ifdef SAVE_PLAYLIST
         s.setValue("playlist", sb->playListStrings());
@@ -293,6 +295,12 @@ void SabasLibrary::loadSettings()
         QDir rd = QDir(rootPath);
         if (!rd.exists()) {
             qDebug() << rootPath << "removed";
+            foreach (const QString &cover, s.value("localCovers").toStringList()) {
+                if (cover.startsWith(QStandardPaths::writableLocation(QStandardPaths::CacheLocation))) {
+                    QFile::remove(cover);
+                    qDebug() << "removed downloaded cover" << cover;
+                }
+            }
             continue;
         }
         SabasBook *sb = new SabasBook(rootPath);
@@ -307,6 +315,7 @@ void SabasLibrary::loadSettings()
         QQmlEngine::setObjectOwnership(sb, QQmlEngine::CppOwnership);
         sb->setCurrentIndex(s.value("lastIndex").toInt());
         sb->setLastTrackPosition(s.value("lastTrackPosition").toLongLong());
+        sb->setLocalCovers(s.value("localCovers").toStringList());
         QString savedCover = s.value("coverPath").toString();
         if (!savedCover.isEmpty())
             sb->setCoverPath(savedCover);
@@ -324,7 +333,7 @@ void SabasLibrary::scanNewBooks()
             foreach (SabasBook *b, m_books) {
                 if (b->rootPath() == parentDir.absolutePath() + "/" + s) {
                     alreadyThere = true;
-                    qDebug() << "book already loaded from settings";
+//                    qDebug() << "book already loaded from settings";
                     break;
                 }
             }
@@ -347,6 +356,12 @@ void SabasLibrary::scanDeletedBooks()
             if (m_selectedBook == sb) {
                 m_selectedBook = 0;
                 emit selectedBookChanged(0);
+            }
+            foreach (const QString &cover, sb->localCovers()) {
+                if (cover.startsWith(QStandardPaths::writableLocation(QStandardPaths::CacheLocation))) {
+                    QFile::remove(cover);
+                    qDebug() << "removed downloaded cover" << cover;
+                }
             }
             m_books.removeOne(sb);
             emit booksChanged(books());
@@ -386,7 +401,7 @@ void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
         qDebug() << "Saving filename " << f.fileName();
         f.write(reply->readAll());
         f.close();
-        forBook->setCoverPath(f.fileName());
+        forBook->setCoverPath("file://" + f.fileName());
     });
 }
 

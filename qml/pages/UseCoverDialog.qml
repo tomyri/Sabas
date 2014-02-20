@@ -7,10 +7,9 @@ Dialog {
     id: dialog
     DialogHeader {
         id: header
-        acceptText: qsTr("Download selected")
+        acceptText: qsTr("Use this cover")
         z: 3
     }
-
     Image {
         id: image
         fillMode: Image.PreserveAspectFit
@@ -20,8 +19,4 @@ Dialog {
             centerIn: parent
         }
     }
-    onClicked: {
-        console.debug("Start download")
-    }
-
 }

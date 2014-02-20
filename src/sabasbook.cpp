@@ -49,7 +49,13 @@ void SabasBook::scanFolder(const QString &folder)
     coverFilter << "*.jpg" << "*.jpeg" << "*.png" << "*.gif";
     QStringList coverFiles = dir.entryList(coverFilter, QDir::Files);
     if (!coverFiles.isEmpty()) {
-        setCoverPath(dir.absolutePath() + "/" + coverFiles.first());
+        setCoverPath("file://" + dir.absolutePath() + "/" + coverFiles.first());
+        foreach (const QString &c, coverFiles) {
+            if (!m_localCovers.contains("file://" + dir.absolutePath() + "/" + c)) {
+                m_localCovers.append("file://" + dir.absolutePath() + "/" + c);
+                emit possibleCoversChanged(possibleCovers());
+            }
+        }
     }
     QStringList filters;
     filters << "*.mp3" << "*.ogg" << "*.m4a" << "*.flac" << "*.acc" << "*.mp4" << "*.3gp";
@@ -68,9 +74,25 @@ void SabasBook::scanFolder(const QString &folder)
         }
     }
 }
+QStringList SabasBook::localCovers() const
+{
+    return m_localCovers;
+}
+
+void SabasBook::setLocalCovers(const QStringList &localCovers)
+{
+    m_localCovers.clear();
+    foreach (const QString &cover, localCovers) {
+        if (QFile::exists(cover))
+            m_localCovers.append(cover);
+        else
+            qDebug() << cover << "don't exists anymore";
+    }
+}
+
 QStringList SabasBook::possibleCovers() const
 {
-    return m_possibleCovers;
+    return m_localCovers + m_onlineCovers;
 }
 
 QStringList SabasBook::tracks() const
@@ -152,17 +174,22 @@ void SabasBook::previous()
 
 void SabasBook::setCoverPath(const QString &path)
 {
+    if (!m_localCovers.contains(path)) {
+        m_localCovers.append(path);
+        emit possibleCoversChanged(possibleCovers());
+    }
     if (m_coverPath != path) {
         m_coverPath = path;
         emit coverPathChanged(path);
     }
+    qDebug() << "local covers" << m_localCovers;
 }
 
-void SabasBook::setPossibleCovers(const QStringList &coverUrls)
+void SabasBook::setOnlineCovers(const QStringList &coverUrls)
 {
-    if (m_possibleCovers != coverUrls) {
-        m_possibleCovers = coverUrls;
-        emit possibleCoversChanged(coverUrls);
+    if (m_onlineCovers != coverUrls) {
+        m_onlineCovers = coverUrls;
+        emit possibleCoversChanged(possibleCovers());
     }
 }
 

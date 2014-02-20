@@ -12,8 +12,8 @@ class SabasBook : public QObject
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
-    Q_PROPERTY(QString coverPath READ coverPath NOTIFY coverPathChanged)
-    Q_PROPERTY(QStringList possibleCovers READ possibleCovers WRITE setPossibleCovers NOTIFY possibleCoversChanged)
+    Q_PROPERTY(QString coverPath READ coverPath WRITE setCoverPath NOTIFY coverPathChanged)
+    Q_PROPERTY(QStringList possibleCovers READ possibleCovers NOTIFY possibleCoversChanged)
     Q_PROPERTY(QStringList tracks READ tracks NOTIFY tracksChanged)
     Q_PROPERTY(int trackCount READ trackCount NOTIFY trackCountChanged)
 
@@ -45,13 +45,16 @@ public:
     QStringList tracks() const;
     int trackCount() const;
 
+    QStringList localCovers() const;
+    void setLocalCovers(const QStringList &localCovers);
+
 public slots:
     void locateMedia();
     void setLastTrackPosition(qint64 position);
     void next();
     void previous();
     void setCoverPath(const QString &path);
-    void setPossibleCovers(const QStringList &coverUrls);
+    void setOnlineCovers(const QStringList &coverUrls);
 
 signals:
     void nameChanged(const QString &name);
@@ -71,7 +74,8 @@ private:
     qint64 m_lastTrackPosition;
     QString m_coverPath;
     qreal m_playbackRate;
-    QStringList m_possibleCovers;
+    QStringList m_localCovers;
+    QStringList m_onlineCovers;
     QFileSystemWatcher *m_fsw;
     int m_trackCount;
 };
