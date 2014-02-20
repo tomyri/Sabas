@@ -182,7 +182,6 @@ void SabasBook::setCoverPath(const QString &path)
         m_coverPath = path;
         emit coverPathChanged(path);
     }
-    qDebug() << "local covers" << m_localCovers;
 }
 
 void SabasBook::setOnlineCovers(const QStringList &coverUrls)
