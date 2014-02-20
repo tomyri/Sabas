@@ -12,13 +12,14 @@ Features:
 
 TODO:
 - Selection for playback rate
-- Proper cover loading
+- Library root selection
+- Support for headset buttons
 
 How To Use It
 =============
 
 Place your books in 'Audiobooks' or 'Documents/Audiobooks' folder under user's home folder. (This will be user selectable 
-if/when there is file picker component.)
+if/when there is file picker component.) Vote https://together.jolla.com/question/321/file-picker-needed/
 
 Licenses
 ========
