@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     translator.load(QLocale::system(), "harbour-sabas", "_", SailfishApp::pathTo("i18n").toLocalFile(), ".qm");
     app->installTranslator(&translator);
     QScopedPointer<QQuickView> v(SailfishApp::createView());
-    v->setSource(SailfishApp::pathTo("qml/harbour-sabas.qml"));
+    v->setSource(SailfishApp::pathTo("qml/main.qml"));
     v->show();
     return app->exec();
 }

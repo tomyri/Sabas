@@ -19,7 +19,7 @@ SOURCES += \
     src/main.cpp \
     src/folderselector.cpp
 
-OTHER_FILES += qml/harbour-sabas.qml \
+OTHER_FILES += \
     qml/cover/CoverPage.qml \
     rpm/harbour-sabas.spec \
     rpm/harbour-sabas.yaml \
@@ -32,7 +32,8 @@ OTHER_FILES += qml/harbour-sabas.qml \
     qml/pages/SelectTrackDialog.qml \
     qml/pages/SelectCoverPage.qml \
     qml/pages/UseCoverDialog.qml \
-    qml/pages/SelectLibraryPathDialog.qml
+    qml/pages/SelectLibraryPathDialog.qml \
+    qml/main.qml
 
 HEADERS += \
     src/sabasplugin.h \

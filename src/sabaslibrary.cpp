@@ -190,7 +190,7 @@ void SabasLibrary::stopSleepTimer()
 
 void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchString, bool feelingLucky)
 {
-    if (!isCoverSearchEnabled())
+    if (!coverSearchEnabled())
         return;
     if (m_nam == 0)
         m_nam = new QNetworkAccessManager(this);
@@ -254,7 +254,7 @@ bool SabasLibrary::sleepTimerActive() const
     return m_sleepTimer != 0;
 }
 
-bool SabasLibrary::isCoverSearchEnabled() const
+bool SabasLibrary::coverSearchEnabled() const
 {
     return !BING_KEY.isEmpty();
 }

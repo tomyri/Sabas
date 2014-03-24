@@ -29,7 +29,7 @@ public:
     qint64 trackPosition() const;
     SabasBook *selectedBook() const;
     bool sleepTimerActive() const;
-    Q_INVOKABLE bool isCoverSearchEnabled() const;
+    Q_INVOKABLE bool coverSearchEnabled() const;
     bool searchingCover() const;
     QStringList books() const;
 

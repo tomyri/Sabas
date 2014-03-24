@@ -23,7 +23,7 @@ Page {
                 id: missingCoverSearch
                 text: qsTr("Find missing covers")
                 enabled: false
-                visible: SabasLibrary.isCoverSearchEnabled()
+                visible: SabasLibrary.coverSearchEnabled()
                 onClicked: {
                     enabled  = false
                     SabasLibrary.searchMissingCovers()
@@ -71,7 +71,7 @@ Page {
                         var book = SabasLibrary.at(index)
                         pageStack.push("SelectCoverPage.qml", {"book":book})
                     }
-                    visible: SabasLibrary.isCoverSearchEnabled()
+                    visible: SabasLibrary.coverSearchEnabled()
                 }
                 Component.onCompleted: {
                     if (SabasLibrary.at(index).coverPath === "") {
