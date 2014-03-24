@@ -268,6 +268,7 @@ void SabasLibrary::saveSettings()
 {
     qDebug() << "Saving settings";
     QSettings s;
+    s.setValue("libraryRootPaths", m_libraryRootPaths);
     s.beginWriteArray("books");
     for (int k = 0; k < m_books.size(); ++k) {
         SabasBook *sb = m_books.at(k);
@@ -288,6 +289,9 @@ void SabasLibrary::saveSettings()
 void SabasLibrary::loadSettings()
 {
     QSettings s;
+    m_libraryRootPaths = s.value("libraryRootPaths",
+                                 QStringList() << QDir::homePath() + "/Audiobooks"
+                                 << QDir::homePath() + "/Documents/Audiobooks").toStringList();
     int size = s.beginReadArray("books");
     for (int k = 0; k < size; ++k) {
         s.setArrayIndex(k);
@@ -352,7 +356,7 @@ void SabasLibrary::scanNewBooks()
 void SabasLibrary::scanDeletedBooks()
 {
     foreach (SabasBook *sb, m_books) {
-        if (!QDir(sb->rootPath()).exists()) {
+        if (!QDir(sb->rootPath()).exists() || !isUnderLibraryPaths(sb->rootPath())) {
             if (m_selectedBook == sb) {
                 m_selectedBook = 0;
                 emit selectedBookChanged(0);
@@ -375,6 +379,15 @@ void SabasLibrary::scanChanges(const QString &path)
     Q_UNUSED(path)
     scanNewBooks();
     scanDeletedBooks();
+}
+
+bool SabasLibrary::isUnderLibraryPaths(const QString &path) const
+{
+    foreach (const QString &p, m_libraryRootPaths) {
+        if (path.startsWith(p))
+            return true;
+    }
+    return false;
 }
 
 void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
@@ -403,6 +416,12 @@ void SabasLibrary::downloadCover(const QString &url, SabasBook *forBook)
         f.close();
         forBook->setCoverPath("file://" + f.fileName());
     });
+}
+
+void SabasLibrary::setLibraryRootPath(const QString &path)
+{
+    m_libraryRootPaths = QStringList(path);
+    scanChanges(path);
 }
 
 QStringList SabasLibrary::books() const

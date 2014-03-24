@@ -6,18 +6,18 @@ Page {
     id: page
     SilicaListView {
         PullDownMenu {
-//            MenuItem {
-//                text: qsTr("Change library path")
-//                onClicked: {
-//                    var dialog = pageStack.push("RenameDialog.qml", {"label": qsTr("Library Path"),"text" : SabasLibrary.libraryRootPath})
-//                    dialog.accepted.connect(function() {
-//                        SabasLibrary.libraryRootPath = dialog.text
-//                    })
-//                }
-//            }
             MenuItem {
                 text: qsTr("Help")
                 onClicked: pageStack.push("HelpPage.qml")
+            }
+            MenuItem {
+                text: qsTr("Change library path")
+                onClicked: {
+                    var dialog = pageStack.push("SelectLibraryPathDialog.qml")
+                    dialog.accepted.connect(function() {
+                        SabasLibrary.setLibraryRootPath(dialog.dir)
+                    })
+                }
             }
             MenuItem {
                 id: missingCoverSearch

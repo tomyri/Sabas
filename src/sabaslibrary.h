@@ -46,6 +46,7 @@ public slots:
     void searchCover(SabasBook *book, const QString &customSearchString = "", bool feelingLucky = true);
     void searchMissingCovers();
     void downloadCover(const QString &url, SabasBook *forBook);
+    void setLibraryRootPath(const QString &path);
 
 signals:
     void playingChanged(bool playing);
@@ -62,6 +63,7 @@ private:
     void scanNewBooks();
     void scanDeletedBooks();
     void scanChanges(const QString &path);
+    bool isUnderLibraryPaths(const QString &path) const;
     QList<SabasBook*> m_books;
     QMediaPlayer *m_player;
     QTimer *m_sleepTimer;

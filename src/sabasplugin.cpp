@@ -1,6 +1,7 @@
 #include "sabasplugin.h"
 #include "sabaslibrary.h"
 #include "sabasbook.h"
+#include "folderselector.h"
 #include <QJSEngine>
 #include <QtQuick>
 
@@ -30,4 +31,5 @@ void SabasPlugin::registerTypes(const char *uri)
     // @uri harbour.sabas.sabasplugin
     qmlRegisterSingletonType<SabasLibrary>(uri, 1, 0, "SabasLibrary", sabasLibraryInstance);
     qmlRegisterUncreatableType<SabasBook>(uri, 1, 0, "SabasBook", QStringLiteral("Books are provided by SabasLibrary"));
+    qmlRegisterType<FolderSelector>(uri, 1, 0, "FolderSelector");
 }

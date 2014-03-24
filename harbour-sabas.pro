@@ -16,7 +16,8 @@ SOURCES += \
     src/sabasplugin.cpp \
     src/sabaslibrary.cpp \
     src/sabasbook.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/folderselector.cpp
 
 OTHER_FILES += qml/harbour-sabas.qml \
     qml/cover/CoverPage.qml \
@@ -30,13 +31,15 @@ OTHER_FILES += qml/harbour-sabas.qml \
     qml/pages/HelpPage.qml \
     qml/pages/SelectTrackDialog.qml \
     qml/pages/SelectCoverPage.qml \
-    qml/pages/UseCoverDialog.qml
+    qml/pages/UseCoverDialog.qml \
+    qml/pages/SelectLibraryPathDialog.qml
 
 HEADERS += \
     src/sabasplugin.h \
     src/sabaslibrary.h \
     src/sabasbook.h \
-    src/bingkey.h
+    src/bingkey.h \
+    src/folderselector.h
 
 CONFIG += c++11
 
