@@ -13,11 +13,11 @@ class QFileSystemWatcher;
 class SabasLibrary : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged)
+    Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
     Q_PROPERTY(qint64 trackDuration READ trackDuration NOTIFY trackDurationChanged)
     Q_PROPERTY(qint64 trackPosition READ trackPosition WRITE setTrackPosition NOTIFY trackPositionChanged)
     Q_PROPERTY(SabasBook* selectedBook READ selectedBook NOTIFY selectedBookChanged)
-    Q_PROPERTY(bool isSleepTimerActive READ isSleepTimerActive NOTIFY sleepTimerActivityChanged)
+    Q_PROPERTY(bool sleepTimerActive READ sleepTimerActive NOTIFY sleepTimerActiveChanged)
     Q_PROPERTY(bool searchingCover READ searchingCover NOTIFY searchingCoverChanged)
     Q_PROPERTY(QStringList books READ books NOTIFY booksChanged)
 
@@ -28,14 +28,14 @@ public:
     qint64 trackDuration() const;
     qint64 trackPosition() const;
     SabasBook *selectedBook() const;
-    bool isSleepTimerActive() const;
+    bool sleepTimerActive() const;
     Q_INVOKABLE bool isCoverSearchEnabled() const;
     bool searchingCover() const;
     QStringList books() const;
 
 public slots:
     void toggle() const;
-    bool isPlaying() const;
+    bool playing() const;
     void skip(qint64 msec) const;
     void stop();
     void pause();
@@ -48,11 +48,11 @@ public slots:
     void downloadCover(const QString &url, SabasBook *forBook);
 
 signals:
-    void isPlayingChanged(bool playing);
+    void playingChanged(bool playing);
     void trackDurationChanged(qint64 duration);
     void trackPositionChanged(qint64 position);
     void selectedBookChanged(SabasBook* book);
-    void sleepTimerActivityChanged(bool isRunning);    
+    void sleepTimerActiveChanged(bool isRunning);
     void searchingCoverChanged(bool searching);
     void booksChanged(QStringList books);
 

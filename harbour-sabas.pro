@@ -12,10 +12,11 @@ QT += multimedia network
 
 CONFIG += sailfishapp
 
-SOURCES += src/harbour-sabas.cpp \
+SOURCES += \
     src/sabasplugin.cpp \
     src/sabaslibrary.cpp \
-    src/sabasbook.cpp
+    src/sabasbook.cpp \
+    src/main.cpp
 
 OTHER_FILES += qml/harbour-sabas.qml \
     qml/cover/CoverPage.qml \

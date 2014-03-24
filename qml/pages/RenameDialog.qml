@@ -4,7 +4,6 @@ import Sailfish.Silica 1.0
 Dialog {
     property alias label: label.text
     property alias text: textField.text
-
     Column {
         spacing: 10
         anchors.fill: parent

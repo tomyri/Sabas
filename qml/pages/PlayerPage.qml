@@ -6,7 +6,6 @@ Page {
     function prettyTimeFromMsec(msec) {
         return ("%1:%2").arg(parseInt(msec / 1000 / 60)).arg(("0" + parseInt(msec  / 1000 % 60)).slice(-2))
     }
-
     id: page
     property var book
     SilicaFlickable {
@@ -17,7 +16,7 @@ Page {
                 onClicked: {
                     SabasLibrary.stopSleepTimer()
                 }
-                visible: SabasLibrary.isSleepTimerActive
+                visible: SabasLibrary.sleepTimerActive
             }
             MenuItem {
                 text: qsTr("Sleep timer")
@@ -84,7 +83,7 @@ Page {
                     onClicked: SabasLibrary.skip(-10000)
                 }
                 IconButton {
-                    icon.source: SabasLibrary.isPlaying ? "image://theme/icon-l-pause" : "image://theme/icon-l-play"
+                    icon.source: SabasLibrary.playing ? "image://theme/icon-l-pause" : "image://theme/icon-l-play"
                     onClicked: SabasLibrary.toggle()
                 }
                 IconButton {

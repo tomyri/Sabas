@@ -34,7 +34,7 @@ SabasLibrary::SabasLibrary(QObject *parent) :
     saveSettings();
     m_player->setNotifyInterval(1000);
     connect(m_player, &QMediaPlayer::stateChanged, [=](QMediaPlayer::State state){
-        emit isPlayingChanged(state == QMediaPlayer::PlayingState);
+        emit playingChanged(state == QMediaPlayer::PlayingState);
     });
     connect(m_player, &QMediaPlayer::mediaStatusChanged, [=](QMediaPlayer::MediaStatus status){
         if (status == QMediaPlayer::BufferedMedia) {
@@ -76,7 +76,7 @@ void SabasLibrary::toggle() const
         m_player->pause();
 }
 
-bool SabasLibrary::isPlaying() const
+bool SabasLibrary::playing() const
 {
     return m_player->state() == QMediaPlayer::PlayingState;
 }
@@ -175,7 +175,7 @@ void SabasLibrary::startSleepTimer(int minutes)
         });
     }
     m_sleepTimer->start(minutes * 60 * 1000);
-    emit sleepTimerActivityChanged(true);
+    emit sleepTimerActiveChanged(true);
 }
 
 void SabasLibrary::stopSleepTimer()
@@ -185,7 +185,7 @@ void SabasLibrary::stopSleepTimer()
     m_sleepTimer->stop();
     m_sleepTimer->deleteLater();
     m_sleepTimer = 0;
-    emit sleepTimerActivityChanged(false);
+    emit sleepTimerActiveChanged(false);
 }
 
 void SabasLibrary::searchCover(SabasBook *book, const QString &customSearchString, bool feelingLucky)
@@ -249,7 +249,7 @@ SabasBook *SabasLibrary::selectedBook() const
     return m_selectedBook;
 }
 
-bool SabasLibrary::isSleepTimerActive() const
+bool SabasLibrary::sleepTimerActive() const
 {
     return m_sleepTimer != 0;
 }

@@ -31,7 +31,6 @@ Dialog {
                 color: mediaIndex == index ? Theme.highlightColor : Theme.primaryColor
                 anchors.verticalCenter: parent.verticalCenter
             }
-
             Label {
                 text: "%1".arg(modelData)
                 color: mediaIndex == index ? Theme.highlightColor : Theme.primaryColor

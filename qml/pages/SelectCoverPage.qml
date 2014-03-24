@@ -7,7 +7,6 @@ Page {
         var pre = "file://";
         return (url.substring(0, pre.length) === pre);
     }
-
     property var book
     property int selectedIndex
     property bool coverSelected: false
