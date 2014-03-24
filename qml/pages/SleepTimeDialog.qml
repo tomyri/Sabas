@@ -13,6 +13,7 @@ Dialog {
             id: slider
             width: parent.width
             label: qsTr("Stop playing after %1 minutes").arg(value)
+            valueText: value
             minimumValue: 1
             maximumValue: 120
             stepSize: 1
