@@ -46,15 +46,16 @@
 <context>
     <name>LibraryPage</name>
     <message>
+        <location filename="../qml/pages/LibraryPage.qml" line="14"/>
         <source>Change library path</source>
-        <translation type="vanished">Vaihda kirjastopolku</translation>
+        <translation>Vaihda kirjastopolku</translation>
     </message>
     <message>
         <source>Library Path</source>
         <translation type="vanished">Kirjaston polku</translation>
     </message>
     <message>
-        <location filename="../qml/pages/LibraryPage.qml" line="19"/>
+        <location filename="../qml/pages/LibraryPage.qml" line="10"/>
         <source>Help</source>
         <translation>Ohje</translation>
     </message>
@@ -114,22 +115,22 @@
 <context>
     <name>PlayerPage</name>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="16"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="15"/>
         <source>Stop sleep timer</source>
         <translation>Sulje uniajastin</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="23"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="22"/>
         <source>Sleep timer</source>
         <translation>Uniajastin</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="32"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="31"/>
         <source>Select track</source>
         <translation>Valitse raita</translation>
     </message>
     <message>
-        <location filename="../qml/pages/PlayerPage.qml" line="66"/>
+        <location filename="../qml/pages/PlayerPage.qml" line="65"/>
         <source>Track: %1, Duration: %2</source>
         <translation>Raita: %1, Kesto: %2</translation>
     </message>
@@ -141,7 +142,7 @@
 <context>
     <name>RenameDialog</name>
     <message>
-        <location filename="../qml/pages/RenameDialog.qml" line="12"/>
+        <location filename="../qml/pages/RenameDialog.qml" line="11"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
@@ -153,14 +154,27 @@
         <translation type="vanished">Valitse kansi</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SelectCoverPage.qml" line="17"/>
+        <location filename="../qml/pages/SelectCoverPage.qml" line="16"/>
         <source>Select cover</source>
         <translation>Valitse kansi</translation>
     </message>
     <message>
-        <location filename="../qml/pages/SelectCoverPage.qml" line="72"/>
+        <location filename="../qml/pages/SelectCoverPage.qml" line="71"/>
         <source>Local</source>
         <translation>Paikallinen</translation>
+    </message>
+</context>
+<context>
+    <name>SelectLibraryPathDialog</name>
+    <message>
+        <location filename="../qml/pages/SelectLibraryPathDialog.qml" line="10"/>
+        <source>Use this path</source>
+        <translation>Käytä tätä polkua</translation>
+    </message>
+    <message>
+        <location filename="../qml/pages/SelectLibraryPathDialog.qml" line="17"/>
+        <source>Path: </source>
+        <translation>Polku: </translation>
     </message>
 </context>
 <context>
