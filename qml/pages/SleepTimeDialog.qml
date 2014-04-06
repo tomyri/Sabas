@@ -16,6 +16,11 @@ Dialog {
 
         Label {
             text: qsTr("Stop playing after %1 minutes").arg(minutes)
+            anchors {
+                left: parent.left
+                right: parent.right
+                margins: Theme.paddingLarge
+            }
         }
 
         TimePicker {
