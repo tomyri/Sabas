@@ -2,21 +2,31 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Dialog {
-    property alias minutes: slider.value
+    id: sleepDialog
+    canAccept: !(picker.hour==0 && picker.minute==0)
+
+    property int minutes: 1
+
     Column {
         spacing: 10
         anchors.fill: parent
         DialogHeader {
             acceptText: qsTr("Start")
         }
-        Slider {
-            id: slider
-            width: parent.width
-            label: qsTr("Stop playing after %1 minutes").arg(value)
-            valueText: value
-            minimumValue: 1
-            maximumValue: 120
-            stepSize: 1
+
+        Label {
+            text: qsTr("Stop playing after %1 minutes").arg(minutes)
+        }
+
+        TimePicker {
+            id: picker
+            anchors.horizontalCenter: parent.horizontalCenter
+            hourMode: DateTime.TwentyFourHours
+            minute: 1
+
+            onTimeChanged: {
+                minutes = time.getHours()*60 + time.getMinutes();
+            }
         }
     }
 }
