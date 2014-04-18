@@ -137,7 +137,8 @@ void SabasLibrary::play(SabasBook *book, bool fromBeginning)
     s->start(500);
     connect(s, &QTimer::timeout, [=](){
         if (m_selectedBook != 0) //check if already stopped
-            m_player->setPosition(m_selectedBook->lastTrackPosition());
+            //resume 5 seconds back
+            m_player->setPosition(m_selectedBook->lastTrackPosition() - 5000);
         s->deleteLater();
     });
     if (m_saveTimer == 0)
